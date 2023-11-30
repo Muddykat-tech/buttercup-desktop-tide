@@ -3,10 +3,9 @@
 > See main Branch [Buttercup](https://github.com/buttercup/buttercup-desktop/tree/master)
 
 ## About
-This branch changes a relativly small function of vault creation, in which in place of a master password you can create or unlock a vault using a Tide / Heimdall account, which removes the correlation of password strength and the vaults resistance against brute forcing.
+This branch changes a relativly small function of vault creation, in which in place of a master password you can create or unlock a vault using a Tide account, which removes the correlation of password strength and the vaults resistance against brute forcing.
 
-For a general overview of the technology see the [Tide Protocol](https://tide.org/tideprotocol)
-For information on Heimdall see the [Public Repository](https://github.com/tide-foundation/heimdall)
+For a general overview of the technology see the [Tide Protocol](https://tide.org/tideprotocol), for information on Heimdall see the [Public Repository](https://github.com/tide-foundation/heimdall)
 
 ### Practical Changes for the user
 When creating or unlocking a vault inplace of the master password prompt is a login prompt for a Tide Account
