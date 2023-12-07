@@ -17,7 +17,7 @@ import { isOSX } from "../../shared/library/platform";
 import { getIconForProvider, getNativeImageMenuIcon } from "../library/icons";
 import { Preferences } from "../types";
 import { logErr } from "../library/log";
-
+import { tokenEvents, validateToken, tideJWT, updateValue } from './../services/tokenValidation'; // Import validateToken and tideJWT
 async function getContextMenu(): Promise<Menu> {
     const sources = getSourceDescriptions();
     const lastSourceID = getLastSourceID();
@@ -214,6 +214,16 @@ async function getContextMenu(): Promise<Menu> {
         {
             label: t("app-menu.debug"),
             submenu: [{ label: t("app-menu.devtool"), role: "toggleDevTools" }]
+        },
+        {
+            label: t("app-menu.tide-token") + ": " + await validateToken(tideJWT),
+            click: async (menuItem: Electron.MenuItem) => {
+                console.log("Click: " + menuItem.label);
+                const newToken = tideJWT === "Test Token" ? "Bad Token" : "Test Token";
+                await updateValue(newToken); // Validate the tideJWT
+                
+                updateAppMenu(); // Update the application menu with the new label
+            }
         }
     ]);
 }

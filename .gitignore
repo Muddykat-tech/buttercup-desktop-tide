@@ -4,3 +4,11 @@ node_modules
 /build
 /dist
 dev-app-update.yml
+*.vsidx
+.vs/VSWorkspaceState.json
+.vs/slnx.sqlite
+.vs/buttercup-desktop-tide/v17/.wsuo
+.vs/buttercup-desktop-master/v17/.wsuo
+.idea/modules.xml
+.idea/misc.xml
+.idea/.name

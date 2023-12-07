@@ -72,6 +72,9 @@ async function getContextMenu(): Promise<Menu> {
         {
             label: t("app-menu.quit"),
             role: "quit"
+        },
+        {
+            label: t("app-menu.tide-token")
         }
     ]);
 }

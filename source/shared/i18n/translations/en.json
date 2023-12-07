@@ -82,7 +82,8 @@
         "vaults": "Vaults",
         "view": "View",
         "window": "Window",
-        "window-reposition": "Reposition"
+        "window-reposition": "Reposition",
+        "tide-token": "Tide Token"
     },
     "biometrics": {
         "prompt": {
