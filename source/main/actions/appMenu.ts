@@ -18,6 +18,9 @@ import { getIconForProvider, getNativeImageMenuIcon } from "../library/icons";
 import { Preferences } from "../types";
 import { logErr } from "../library/log";
 import { tokenEvents, validateToken, tideJWT, updateValue } from './../services/tokenValidation'; // Import validateToken and tideJWT
+import path from 'path';
+import * as fs from 'fs';
+
 async function getContextMenu(): Promise<Menu> {
     const sources = getSourceDescriptions();
     const lastSourceID = getLastSourceID();
@@ -25,6 +28,11 @@ async function getContextMenu(): Promise<Menu> {
     const preferences = await getConfigValue("preferences");
     const currentVaultPrefix = [];
     const biometricsSupported = await supportsBiometricUnlock();
+    const iconsPath = path.join(__dirname, '..', '../resources/build/icons'); // Path to your icons folder
+    const iconPath = path.join(iconsPath, 'tide-icon.png'); // Adjust the filename if it's different
+    const nativeImage = require('electron').nativeImage;
+    const appIcon = nativeImage.createFromPath(iconPath);
+
     let biometricsEnabled = false,
         lastSourceUnlocked = false;
     if (lastSource) {
@@ -216,14 +224,19 @@ async function getContextMenu(): Promise<Menu> {
             submenu: [{ label: t("app-menu.devtool"), role: "toggleDevTools" }]
         },
         {
-            label: t("app-menu.tide-token") + ": " + await validateToken(tideJWT),
-            click: async (menuItem: Electron.MenuItem) => {
-                console.log("Click: " + menuItem.label);
-                const newToken = tideJWT === "Test Token" ? "Bad Token" : "Test Token";
-                await updateValue(newToken); // Validate the tideJWT
-                
-                updateAppMenu(); // Update the application menu with the new label
-            }
+            label: t("app-menu.tide-token"),
+            submenu: [
+                {
+                    label: "(" + (await validateToken(tideJWT) ? "Valid" : "Invalid") + ")",
+                    icon: appIcon,
+                    click: async (menuItem: Electron.MenuItem) => {
+                        const newToken = tideJWT === "Test Token" ? "Bad Token" : "Test Token";
+                        await updateValue(newToken); // Validate the tideJWT
+
+                        updateAppMenu(); // Update the application menu with the new label
+                    },
+                }
+            ]
         }
     ]);
 }
