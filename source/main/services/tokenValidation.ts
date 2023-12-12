@@ -1,4 +1,5 @@
 import { EventEmitter } from 'events';
+import { Heimdall } from 'heimdall-tide';
 
 const tokenEvents = new EventEmitter();
 
@@ -8,6 +9,7 @@ async function updateValue(newToken: string): Promise<void> {
     await validateAndUpdate(newToken);
     // Emit an event to notify the token update
     tokenEvents.emit('updateToken', newToken);
+    
 }
 
 async function validateAndUpdate(newToken: string): Promise<void> {
