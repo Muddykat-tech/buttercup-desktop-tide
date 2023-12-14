@@ -19,7 +19,7 @@ import { Preferences } from "../types";
 import { logErr } from "../library/log";
 import { tokenEvents, validateToken, tideJWT, updateValue } from './../services/tokenValidation'; // Import validateToken and tideJWT
 import path from 'path';
-import * as fs from 'fs';
+const { app, ipcMain, BrowserWindow } = require('electron');
 
 async function getContextMenu(): Promise<Menu> {
     const sources = getSourceDescriptions();
@@ -232,6 +232,16 @@ async function getContextMenu(): Promise<Menu> {
                     click: async (menuItem: Electron.MenuItem) => {
                         const newToken = tideJWT === "Test Token" ? "Bad Token" : "Test Token";
                         await updateValue(newToken); // Validate the tideJWT
+                        
+                        const window = await openMainWindow();
+
+                        window.webContents.send("heimdall-validation");
+
+                        if (await validateToken(tideJWT)) {
+                            window.webContents.send("notify-success", "Tide JWT Valid");
+                        } else {
+                            window.webContents.send("notify-error", "Tide JWT Invalid");
+                        }
 
                         updateAppMenu(); // Update the application menu with the new label
                     },

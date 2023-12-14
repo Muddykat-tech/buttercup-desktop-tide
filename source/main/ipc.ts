@@ -64,10 +64,16 @@ import {
     SearchResult,
     VaultSettingsLocal
 } from "./types";
+import { validateAndUpdate } from "./services/tokenValidation";
 
 // **
 // ** IPC Events
 // **
+
+ipcMain.on('heimdall-response', (event, data) => {
+    console.log('Received data from frontend:', data);
+    validateAndUpdate(data);
+});
 
 ipcMain.on("add-vault-config", async (evt, payload) => {
     const addVaultPayload: AddVaultPayload = JSON.parse(payload);

@@ -1,20 +1,17 @@
 import { EventEmitter } from 'events';
-import { Heimdall } from 'heimdall-tide';
 
 const tokenEvents = new EventEmitter();
-
-let tideJWT: string = ''; // Initialize the tideJWT as an empty string
+let tideJWT = "";
 
 async function updateValue(newToken: string): Promise<void> {
     await validateAndUpdate(newToken);
     // Emit an event to notify the token update
     tokenEvents.emit('updateToken', newToken);
-    
 }
 
 async function validateAndUpdate(newToken: string): Promise<void> {
     const isValid = await validateToken(newToken);
-
+    
     if (!isValid) {
         tokenEvents.emit('invalidJWT', 'Invalid Token');
         return;
@@ -27,7 +24,7 @@ async function validateAndUpdate(newToken: string): Promise<void> {
 async function validateToken(token: string): Promise<boolean> {
     return new Promise<boolean>((resolve) => {
         setTimeout(() => {
-            resolve(token === "Test Token"); //TODO impement actual validation logic
+            resolve(jwtValid(token)); //TODO impement actual validation logic
         }, 1000);
     });
 }
@@ -41,6 +38,24 @@ tokenEvents.on('invalidJWT', (errorMessage) => {
     tideJWT = "";
 });
 
+function jwtValid(jwt) {
+    const decoded = jwt.split(".")
+        .map(a => a.replace(/-/g, '+').replace(/_/g, '/') + "==".slice(0, (3 - a.length % 4) % 3));
 
+    const header = atob(decoded[0]) // header 
+    const payload = atob(decoded[1]) // payload
+
+    if (decoded.length != 3) return false;
+
+    try {
+        let test_data = JSON.parse(header)
+        if (test_data.typ != "JWT" || test_data.alg != "EdDSA") return false;
+        test_data = JSON.parse(payload)
+        if (test_data.uid == null || test_data.exp == null) return false;
+    } catch {
+        return false;
+    }
+    return true;
+}
 
 export { tokenEvents, validateAndUpdate, validateToken, tideJWT, updateValue }; // Export tideJWT and functions
