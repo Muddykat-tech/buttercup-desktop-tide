@@ -64,10 +64,23 @@ import {
     SearchResult,
     VaultSettingsLocal
 } from "./types";
+import { validateAndUpdate } from "./services/tokenValidation";
 
 // **
 // ** IPC Events
 // **
+
+ipcMain.on("heimdall-response", async (event, data) => {
+    const receivedData = JSON.parse(data);
+    const valid = await validateAndUpdate(receivedData.token);
+
+    if (valid) {
+        const current_win = await BrowserWindow.getFocusedWindow();
+        current_win.close();
+    } else {
+        console.error("Failed to Validate JWT");
+    }
+});
 
 ipcMain.on("add-vault-config", async (evt, payload) => {
     const addVaultPayload: AddVaultPayload = JSON.parse(payload);

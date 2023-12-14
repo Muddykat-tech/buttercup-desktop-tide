@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Authentication Window</title>
+</head>
+<body>
+    <h1 id="hey"></h1>
+    <script type="module">
+        import { Heimdall, TidePromise } from "https://unpkg.com/heimdall-tide@0.0.50-test/src/heimdall.js";
+
+        // Function to send data to the main process
+        const sendDataToMainProcess = (data) => {
+            window.api.send("heimdall-response", JSON.stringify(data));
+        }
+
+        const config = {
+            vendorPublic: "JFRx67tBKknkrgD3aVbce+XdzRc0UnPau5D5ZleL1x0=",
+            appOriginText: "This is my text that i signed because i couldn't make my app more secure.",
+            appOriginTextSignature: "qdf9s5K8iNxMUHVb+9/LIqoK2sd4QbDB+qdmwEOpiJXDamn+SsOtFmC+jDKtdXw5gvhSEZrmma7BHsnOZVCKBw==",
+            homeORKUrl: "https://prod-ork3.azurewebsites.net",
+            enclaveRequest: {
+                getUserInfoFirst: false, // 1 step process - we will not supply a customModel halfway through the process
+                refreshToken: true, // I want a TideJWT returned
+                customModel: undefined // I do not want to provide a customModel
+            }
+        }
+
+        const heimdall = new Heimdall(config);
+        const tidePromise = new TidePromise();
+
+        // Function to handle the button action and send data to the main process
+        const tideButtonAction = async (promise) => {
+            heimdall.GetCompleted(promise);
+            const values = await tidePromise.promise;
+            sendDataToMainProcess({ token: values.TideJWT });
+        }
+
+        const tideButton = heimdall.AddTideButton(tideButtonAction, tidePromise);
+    </script>
+</body>
+</html>
