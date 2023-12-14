@@ -244,6 +244,7 @@ export async function lockAllSources() {
 }
 
 export async function lockSource(sourceID: VaultSourceID) {
+    logInfo("Inside lock source!");
     const vaultManager = getVaultManager();
     const source = vaultManager.getSourceForID(sourceID);
     if (source.status === VaultSourceStatus.Unlocked) {
@@ -331,6 +332,7 @@ export async function toggleAutoUpdate(autoUpdateEnabled: boolean = true) {
 }
 
 export async function unlockSource(sourceID: VaultSourceID, password: string) {
+    logInfo("Inside unlock source!");
     const vaultManager = getVaultManager();
     const source = vaultManager.getSourceForID(sourceID);
     await source.unlock(Credentials.fromPassword(password));
