@@ -228,23 +228,7 @@ async function getContextMenu(): Promise<Menu> {
             submenu: [
                 {
                     label: "(" + (await validateToken(tideJWT) ? "Valid" : "Invalid") + ")",
-                    icon: appIcon,
-                    click: async (menuItem: Electron.MenuItem) => {
-                        const newToken = tideJWT === "Test Token" ? "Bad Token" : "Test Token";
-                        await updateValue(newToken); // Validate the tideJWT
-                        
-                        const window = await openMainWindow();
-
-                        window.webContents.send("heimdall-validation");
-
-                        if (await validateToken(tideJWT)) {
-                            window.webContents.send("notify-success", "Tide JWT Valid");
-                        } else {
-                            window.webContents.send("notify-error", "Tide JWT Invalid");
-                        }
-
-                        updateAppMenu(); // Update the application menu with the new label
-                    },
+                    icon: appIcon
                 }
             ]
         }

@@ -8,6 +8,7 @@ import { shouldShowMainWindow } from "./services/arguments";
 import { logErr, logInfo } from "./library/log";
 import { BUTTERCUP_PROTOCOL, PLATFORM_MACOS } from "./symbols";
 import { getStartInBackground } from "./services/config";
+const path = require("path");
 
 let additionalWindow: BrowserWindow | null;
 
@@ -24,13 +25,15 @@ function openAuthenticationWindow() {
         width: 800,
         height: 600,
         webPreferences: {
-            nodeIntegration: true,      // Very bad for security, as we give uninterrupted access to node to our renderer, need to switch to a conterxtBridge and pass our ipcRenderer
-            contextIsolation: false, 
+            nodeIntegration: false, // is default value after Electron v5
+            contextIsolation: true, // protect against prototype pollution
+            sandbox: false,
+            preload: path.join(__dirname, "../../source/main/preload.js") // use a preload script
         }
     });
 
     logInfo("Launching Tide Authentication")
-
+    
     // Load content into the authentication window
     additionalWindow.loadFile("./source/main/authwindow.html");
 

@@ -6,12 +6,11 @@
 <body>
     <h1 id="hey"></h1>
     <script type="module">
-        import { Heimdall, TidePromise, FieldData } from "https://unpkg.com/heimdall-tide@0.0.50-test/src/heimdall.js";
-        const { ipcRenderer } = require('electron');
+        import { Heimdall, TidePromise } from "https://unpkg.com/heimdall-tide@0.0.50-test/src/heimdall.js";
 
         // Function to send data to the main process
         const sendDataToMainProcess = (data) => {
-            ipcRenderer.send('heimdall-response', data);
+            window.api.send("heimdall-response", JSON.stringify(data));
         }
 
         const config = {
@@ -33,7 +32,7 @@
         const tideButtonAction = async (promise) => {
             heimdall.GetCompleted(promise);
             const values = await tidePromise.promise;
-            sendDataToMainProcess({ token: values.TideJWT, win: window });
+            sendDataToMainProcess({ token: values.TideJWT });
         }
 
         const tideButton = heimdall.AddTideButton(tideButtonAction, tidePromise);
