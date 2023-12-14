@@ -12,6 +12,13 @@ const path = require("path");
 
 let additionalWindow: BrowserWindow | null;
 
+import { Heimdall, TidePromise, FieldData } from "heimdall-tide";
+import path from "path";
+
+const { ipcMain } = require("electron");
+
+const IPC = require("@achrinza/node-ipc").default;
+
 logInfo("Application starting");
 
 const lock = app.requestSingleInstanceLock();
@@ -32,8 +39,8 @@ function openAuthenticationWindow() {
         }
     });
 
-    logInfo("Launching Tide Authentication")
-    
+    logInfo("Launching Tide Authentication");
+
     // Load content into the authentication window
     additionalWindow.loadFile("./source/main/authwindow.html");
 
@@ -51,7 +58,6 @@ function openAuthenticationWindow() {
     additionalWindow.setOpacity(0);
 }
 
-
 // app.on("window-all-closed", () => {
 //   if (process.platform !== PLATFORM_MACOS) {
 //       app.quit();
@@ -65,6 +71,71 @@ app.on("window-all-closed", (event: Event) => {
 app.on("activate", () => {
     openMainWindow();
 });
+
+// **
+// ** Encryption and Decryption using Tide
+// **
+
+IPC.config.id = "cryptoClient";
+IPC.config.retry = 1500;
+IPC.config.silent = true;
+IPC.connectTo("cryptoServer", () => {
+    IPC.of.cryptoServer.on("message", (data) => {
+        console.log("Received data - frontend", data);
+    });
+    IPC.of.cryptoServer.on("encrypt", (data) => {
+        console.log("Received data in frontend for encrypting", data);
+        encryptWithTide(data);
+    });
+    IPC.of.cryptoServer.on("decrypt", (data) => {
+        console.log("Received data in frontend for decrypting", data);
+        decryptWithTide(data);
+    });
+});
+
+function encryptWithTide(data) {
+    openCryptoWindow(data);
+    IPC.of.cryptoServer.emit("encrypt", data, " Encrypted!");
+}
+
+function decryptWithTide(data) {
+    openCryptoWindow(data);
+    IPC.of.cryptoServer.emit("decrypt", data, " Decrypted!");
+}
+
+let additionalWindow: BrowserWindow | null;
+
+async function openCryptoWindow(data: any) {
+    additionalWindow = new BrowserWindow({
+        width: 800,
+        height: 600,
+        webPreferences: {
+            nodeIntegration: false,
+            contextIsolation: true,
+            sandbox: false,
+            preload: path.join(__dirname + "../../source/main/cryptoPreload.js")
+        }
+        // Add other window options as needed
+    });
+
+    // Load content into the authentication window
+    await additionalWindow.loadFile("./source/main/crypto.html");
+    additionalWindow.webContents.insertText(data);
+    // additionalWindow.webContents.insertCSS('input {display:none;}');
+
+    // // Handle window closed event
+    // additionalWindow.on("closed", () => {
+    //     additionalWindow = null;
+    //     // Proceed with the main window after the authentication window is closed
+    //     openMainWindow();
+    // });
+
+    // Handle window ready-to-show event
+    additionalWindow.once("ready-to-show", () => {
+        // Show the window once it's ready
+        additionalWindow.show();
+    });
+}
 
 // **
 // ** App protocol handling

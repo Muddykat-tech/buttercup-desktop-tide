@@ -17,9 +17,9 @@ import { isOSX } from "../../shared/library/platform";
 import { getIconForProvider, getNativeImageMenuIcon } from "../library/icons";
 import { Preferences } from "../types";
 import { logErr } from "../library/log";
-import { tokenEvents, validateToken, tideJWT, updateValue } from './../services/tokenValidation'; // Import validateToken and tideJWT
-import path from 'path';
-const { app, ipcMain, BrowserWindow } = require('electron');
+import { tokenEvents, validateToken, tideJWT, updateValue } from "./../services/tokenValidation"; // Import validateToken and tideJWT
+import path from "path";
+const { app, ipcMain, BrowserWindow } = require("electron");
 
 async function getContextMenu(): Promise<Menu> {
     const sources = getSourceDescriptions();
@@ -28,9 +28,9 @@ async function getContextMenu(): Promise<Menu> {
     const preferences = await getConfigValue("preferences");
     const currentVaultPrefix = [];
     const biometricsSupported = await supportsBiometricUnlock();
-    const iconsPath = path.join(__dirname, '..', '../resources/build/icons'); // Path to your icons folder
-    const iconPath = path.join(iconsPath, 'tide-icon.png'); // Adjust the filename if it's different
-    const nativeImage = require('electron').nativeImage;
+    const iconsPath = path.join(__dirname, "..", "../resources/build/icons"); // Path to your icons folder
+    const iconPath = path.join(iconsPath, "tide-icon.png"); // Adjust the filename if it's different
+    const nativeImage = require("electron").nativeImage;
     const appIcon = nativeImage.createFromPath(iconPath);
 
     let biometricsEnabled = false,
@@ -227,7 +227,7 @@ async function getContextMenu(): Promise<Menu> {
             label: t("app-menu.tide-token"),
             submenu: [
                 {
-                    label: "(" + (await validateToken(tideJWT) ? "Valid" : "Invalid") + ")",
+                    label: "(" + ((await validateToken(tideJWT)) ? "Valid" : "Invalid") + ")",
                     icon: appIcon
                 }
             ]

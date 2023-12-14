@@ -21,19 +21,16 @@ import {
 import { updateVaultsBiometricsStates } from "./services/biometrics";
 import { showError, showSuccess, showUpdateError } from "./services/notifications";
 import { setBrowserAccessCode } from "./state/browserAccess";
-import { UpdateProgressInfo, VaultSourceDescription } from "./types"
+import { UpdateProgressInfo, VaultSourceDescription } from "./types";
 import { test } from "./actions/tideAuth";
 
 ipcRenderer.on("heimdall-validation", async (evt, payload) => {
-    logInfo("Recieved Call for heimdall", payload)
+    logInfo("Recieved Call for heimdall", payload);
     try {
-        logInfo("Attempting Execution: ")
+        logInfo("Attempting Execution: ");
         const values = await test();
         logInfo("Values: ", values);
-    } catch {
-        
-    }
-
+    } catch {}
 });
 
 ipcRenderer.on("add-vault", (evt) => {

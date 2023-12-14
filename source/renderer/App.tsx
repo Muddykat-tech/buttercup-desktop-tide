@@ -33,9 +33,10 @@ const BaseContainer = styled.div`
 
 export function App() {
     const themeType = useTheme();
+    
     return (
         <ThemeProvider
-            theme={themeType === Theme.Dark ? THEME_DARK: THEME_LIGHT}
+            theme={themeType === Theme.Dark ? THEME_DARK : THEME_LIGHT}
         >
             <ThemeProvider theme={themeType === Theme.Dark ? themes.dark : themes.light}>
                 <DndProvider backend={HTML5Backend}>

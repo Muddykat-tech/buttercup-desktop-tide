@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Crypto Window</title>
+</head>
+
+<body>
+    <div>
+        <input type="text" name="data" id="data" autofocus style="display: none;" />
+    </div>
+    <!-- <button id="click" onclick="Tidify()">Tidify</button> -->
+</body>
+<script type="module">
+    import { Heimdall, TidePromise, FieldData } from "https://unpkg.com/heimdall-tide@0.0.50-test/src/heimdall.js";
+    
+    //Channel to send and receive must be whitelisted in the preload.js file
+    // TO send data
+    //window.api.send("toMain", param);
+
+    //TO receive data
+    //window.api.receive("fromMain", (param) => {data = param});
+
+    const config = {
+        vendorPublic: "us7ieal6GOfYgcVJa50cdqp78qBLy6zqv7zvuqbR34U=",
+        appOriginText: "securing the vendorurl",
+        appOriginTextSignature: "2T0gMbfNFDk69vzHQUBa2ExHDBFkUfG7h00SQ1KPLuIv5som+GOt18ujVIgg8qnCXw4duuCFRb/uHWe0h1a2Aw==",
+        homeORKUrl: "https://prod-ork3.azurewebsites.net",
+        enclaveRequest: {
+            getUserInfoFirst: false, // 1 step process - we will not supply a customModel halfway through the process
+            refreshToken: true, // I want a TideJWT returned
+            customModel: undefined // I do not want to provide a customModel
+        }
+    }
+    const heimdall = new Heimdall(config);
+    const tidePromise = new TidePromise(); // a TidePromise which allows us to get the values from the FULL sign in process
+
+    const fieldData = new FieldData(["vault1"]);
+    fieldData.add(data, ["vault1"]);
+
+    const params = [fieldData, tidePromise];
+
+    const tideButtonAction = async function (params) {
+        console.log(data);
+        heimdall.TESTencryptUserDataTEST(params); // describe what we want the tide button to do
+    }
+
+    const tideButton = heimdall.AddTideButton(tideButtonAction, params); // returns Tide Button for you to stylise
+
+    const encryptedValue = await tidePromise.promise;
+    console.log(encryptedValue);
+
+
+</script>
+
+</html>
