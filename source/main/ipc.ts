@@ -65,6 +65,7 @@ import {
     VaultSettingsLocal
 } from "./types";
 import { validateAndUpdate } from "./services/tokenValidation";
+import { handleCoreDataParse } from "./index";
 
 // **
 // ** IPC Events
@@ -83,11 +84,8 @@ ipcMain.on("heimdall-response", async (event, data) => {
 });
 
 ipcMain.on("toMain", async (event, data) => {
-    const receivedEncryptedValues = JSON.parse(data);
-    console.log("Got Encryption from CryptoPage:", receivedEncryptedValues);
-
-    const current_win = await BrowserWindow.getFocusedWindow();
-    current_win.close();
+    handleCoreDataParse(data)
+    console.log("Got Data from CryptoPage sending to core!");
 });
 
 ipcMain.on("add-vault-config", async (evt, payload) => {

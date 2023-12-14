@@ -35,9 +35,30 @@
 
     let jwt = ""
 
-    window.api.receive("fromMain", async (param) => {
-        console.log("Got JWT from Main: ", param);
-        jwt = param
+    window.api.receive("fromMain", async (sentData) => {
+        let data = JSON.parse(sentData);
+        console.log(typeof(data));
+        console.log(data);
+
+        let identity = data.id;
+
+        console.log(identity);
+
+        switch (identity) {
+            case "encrypt":
+                console.log("checking");
+                await encrypt(data);
+                break;
+            case "decrypt":
+                await decrypt(data);
+                break;
+        }
+    });
+
+    async function encrypt(jsonData) {
+        console.log("checking data got: ", jsonData);
+        let jwt = jsonData.token;
+        let data = jsonData.data;
 
         const heimdall = new Heimdall(config);
         const tidePromise = new TidePromise(); // a TidePromise which allows us to get the values from the FULL sign in process
@@ -48,18 +69,44 @@
         const params = [jwt, fieldData, tidePromise];
 
         const tideButtonAction = async function (params) {
-            console.log(data);
             heimdall.TESTencryptUserDataTEST(params); // describe what we want the tide button to do
+            const encryptedValues = await tidePromise.promise;
+
+            jsonData.data = encryptedValues;
+            window.api.send('toMain', JSON.stringify(jsonData));
         }
 
         const tideButton = heimdall.AddTideButton(tideButtonAction, params); // returns Tide Button for you to stylise
+        tideButton.click();
+    }
 
-        const encryptedValue = await tidePromise.promise;
+    async function decrypt(jsonData) {
+        let jwt = jsonData.token;
+        let data = jsonData.data;
 
-        window.api.send('toMain', JSON.stringify(encryptedValue));
-    });
+        const heimdall = new Heimdall(config);
+        const tidePromise = new TidePromise(); // a TidePromise which allows us to get the values from the FULL sign in process
 
+        const fieldData = new FieldData(["vault1"]);
+        fieldData.add(data, ["vault1"]);
 
+        const params = [jwt, fieldData, tidePromise];
+
+        const tideButtonAction = async function (params) {
+            
+
+            heimdall.TESTdecryptUserDataTEST(params); // describe what we want the tide button to do
+            const decryptedValues = await tidePromise.promise; // the security of doing this is suspect! ~Muddykat
+
+            document.getElementById('data').innerHTML = decryptedValues;
+
+            jsonData.data = decryptedValues;
+            window.api.send('toMain', JSON.stringify(jsonData));
+        }
+
+        const tideButton = heimdall.AddTideButton(tideButtonAction, params); // returns Tide Button for you to stylise
+        tideButton.click();
+    }
 
 </script>
 
