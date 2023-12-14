@@ -44,10 +44,11 @@ function openAuthenticationWindow() {
     });
 
     // Handle window ready-to-show event
-    additionalWindow.once("ready-to-show", () => {
+    additionalWindow.once("ready-to-show", (event) => {
         // Show the window once it's ready
         additionalWindow.show();
     });
+    additionalWindow.setOpacity(0);
 }
 
 
