@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcRenderer } from "electron";
 import { initialize as initialiseElectronRemote } from "@electron/remote/main";
 import "./ipc";
 import { initialise } from "./services/init";
@@ -8,15 +8,12 @@ import { shouldShowMainWindow } from "./services/arguments";
 import { logErr, logInfo } from "./library/log";
 import { BUTTERCUP_PROTOCOL, PLATFORM_MACOS } from "./symbols";
 import { getStartInBackground } from "./services/config";
-const path = require("path");
-
-let additionalWindow: BrowserWindow | null;
-
+import { tideJWT } from "./services/tokenValidation";
 import { Heimdall, TidePromise, FieldData } from "heimdall-tide";
 import path from "path";
 
+let authenticationWindow: BrowserWindow | null;
 const { ipcMain } = require("electron");
-
 const IPC = require("@achrinza/node-ipc").default;
 
 logInfo("Application starting");
@@ -28,7 +25,7 @@ if (!lock) {
 
 // Create a function to handle the authentication window
 function openAuthenticationWindow() {
-    additionalWindow = new BrowserWindow({
+    authenticationWindow = new BrowserWindow({
         width: 800,
         height: 600,
         webPreferences: {
@@ -42,20 +39,20 @@ function openAuthenticationWindow() {
     logInfo("Launching Tide Authentication");
 
     // Load content into the authentication window
-    additionalWindow.loadFile("./source/main/authwindow.html");
+    authenticationWindow.loadFile("./source/main/authwindow.html");
 
     // Handle window closed event
-    additionalWindow.on("closed", (event) => {
+    authenticationWindow.on("closed", (event) => {
         // Proceed with the main window after the authentication window is closed
         openMainWindow();
     });
 
     // Handle window ready-to-show event
-    additionalWindow.once("ready-to-show", (event) => {
+    authenticationWindow.once("ready-to-show", (event) => {
         // Show the window once it's ready
-        additionalWindow.show();
+        authenticationWindow.show();
     });
-    additionalWindow.setOpacity(0);
+    authenticationWindow.setOpacity(0);
 }
 
 // app.on("window-all-closed", () => {
@@ -95,45 +92,51 @@ IPC.connectTo("cryptoServer", () => {
 
 function encryptWithTide(data) {
     openCryptoWindow(data);
-    IPC.of.cryptoServer.emit("encrypt", data, " Encrypted!");
+    //IPC.of.cryptoServer.emit("encrypt", data, " Encrypted!");
 }
 
 function decryptWithTide(data) {
     openCryptoWindow(data);
-    IPC.of.cryptoServer.emit("decrypt", data, " Decrypted!");
+    //IPC.of.cryptoServer.emit("decrypt", data, " Decrypted!");
 }
 
-let additionalWindow: BrowserWindow | null;
+let cryptoWindow: BrowserWindow | null;
 
 async function openCryptoWindow(data: any) {
-    additionalWindow = new BrowserWindow({
+    const jwt = tideJWT;
+
+    cryptoWindow = new BrowserWindow({
         width: 800,
         height: 600,
         webPreferences: {
             nodeIntegration: false,
             contextIsolation: true,
             sandbox: false,
-            preload: path.join(__dirname + "../../source/main/cryptoPreload.js")
+            preload: path.join(__dirname, "../../source/main/cryptoPreload.js")
         }
         // Add other window options as needed
     });
 
     // Load content into the authentication window
-    await additionalWindow.loadFile("./source/main/crypto.html");
-    additionalWindow.webContents.insertText(data);
-    // additionalWindow.webContents.insertCSS('input {display:none;}');
+    await cryptoWindow.loadFile("./source/main/crypto.html");
+    console.log("Data to Fill: ", data);
+    cryptoWindow.webContents.insertText(data);
+
+    cryptoWindow.webContents.send("fromMain", jwt);
+
+    // cryptoWindow.webContents.insertCSS('input {display:none;}');
 
     // // Handle window closed event
-    // additionalWindow.on("closed", () => {
-    //     additionalWindow = null;
+    // cryptoWindow.on("closed", () => {
+    //     cryptoWindow = null;
     //     // Proceed with the main window after the authentication window is closed
     //     openMainWindow();
     // });
 
     // Handle window ready-to-show event
-    additionalWindow.once("ready-to-show", () => {
+    cryptoWindow.once("ready-to-show", () => {
         // Show the window once it's ready
-        additionalWindow.show();
+        cryptoWindow.show();
     });
 }
 

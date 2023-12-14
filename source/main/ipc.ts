@@ -82,6 +82,14 @@ ipcMain.on("heimdall-response", async (event, data) => {
     }
 });
 
+ipcMain.on("toMain", async (event, data) => {
+    const receivedEncryptedValues = JSON.parse(data);
+    console.log("Got Encryption from CryptoPage:", receivedEncryptedValues);
+
+    const current_win = await BrowserWindow.getFocusedWindow();
+    current_win.close();
+});
+
 ipcMain.on("add-vault-config", async (evt, payload) => {
     const addVaultPayload: AddVaultPayload = JSON.parse(payload);
     try {

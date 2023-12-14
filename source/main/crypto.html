@@ -7,7 +7,7 @@
 
 <body>
     <div>
-        <input type="text" name="data" id="data" autofocus style="display: none;" />
+        <input type="text" name="data" id="data" autofocus/>
     </div>
     <!-- <button id="click" onclick="Tidify()">Tidify</button> -->
 </body>
@@ -19,8 +19,8 @@
     //window.api.send("toMain", param);
 
     //TO receive data
-    //window.api.receive("fromMain", (param) => {data = param});
-
+    //
+    console.log("Crypto Window")
     const config = {
         vendorPublic: "us7ieal6GOfYgcVJa50cdqp78qBLy6zqv7zvuqbR34U=",
         appOriginText: "securing the vendorurl",
@@ -32,23 +32,33 @@
             customModel: undefined // I do not want to provide a customModel
         }
     }
-    const heimdall = new Heimdall(config);
-    const tidePromise = new TidePromise(); // a TidePromise which allows us to get the values from the FULL sign in process
 
-    const fieldData = new FieldData(["vault1"]);
-    fieldData.add(data, ["vault1"]);
+    let jwt = ""
 
-    const params = [fieldData, tidePromise];
+    window.api.receive("fromMain", async (param) => {
+        console.log("Got JWT from Main: ", param);
+        jwt = param
 
-    const tideButtonAction = async function (params) {
-        console.log(data);
-        heimdall.TESTencryptUserDataTEST(params); // describe what we want the tide button to do
-    }
+        const heimdall = new Heimdall(config);
+        const tidePromise = new TidePromise(); // a TidePromise which allows us to get the values from the FULL sign in process
 
-    const tideButton = heimdall.AddTideButton(tideButtonAction, params); // returns Tide Button for you to stylise
+        const fieldData = new FieldData(["vault1"]);
+        fieldData.add(data, ["vault1"]);
 
-    const encryptedValue = await tidePromise.promise;
-    console.log(encryptedValue);
+        const params = [jwt, fieldData, tidePromise];
+
+        const tideButtonAction = async function (params) {
+            console.log(data);
+            heimdall.TESTencryptUserDataTEST(params); // describe what we want the tide button to do
+        }
+
+        const tideButton = heimdall.AddTideButton(tideButtonAction, params); // returns Tide Button for you to stylise
+
+        const encryptedValue = await tidePromise.promise;
+
+        window.api.send('toMain', JSON.stringify(encryptedValue));
+    });
+
 
 
 </script>
