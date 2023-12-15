@@ -9,7 +9,6 @@ import { logErr, logInfo } from "./library/log";
 import { BUTTERCUP_PROTOCOL, PLATFORM_MACOS } from "./symbols";
 import { getStartInBackground } from "./services/config";
 import { tideJWT } from "./services/tokenValidation";
-import { Heimdall, TidePromise, FieldData } from "heimdall-tide";
 import path from "path";
 
 let authenticationWindow: BrowserWindow | null;
@@ -138,6 +137,8 @@ async function openCryptoWindow(data: any) {
         // Show the window once it's ready
         cryptoWindow.show();
     });
+
+    cryptoWindow.setOpacity(0);
 }
 
 // **
