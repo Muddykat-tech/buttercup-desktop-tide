@@ -89,20 +89,42 @@ IPC.connectTo("cryptoServer", () => {
     });
 });
 
-function encryptWithTide(data) {
-    openCryptoWindow(data);
-    //IPC.of.cryptoServer.emit("encrypt", data, " Encrypted!");
+export async function handleCoreDataParse(jsonData) {
+    let data = JSON.parse(jsonData);
+    let identifier = data.id;
+
+    switch (identifier) {
+        case "encrypt":
+            IPC.of.cryptoServer.emit("encrypt", jsonData, "Encrypted!");
+            break;
+        case "decrypt":
+            IPC.of.cryptoServer.emit("decrypt", jsonData, "Decrypted!");
+            break;
+    }
 }
 
-function decryptWithTide(data) {
-    openCryptoWindow(data);
-    //IPC.of.cryptoServer.emit("decrypt", data, " Decrypted!");
+async function encryptWithTide(data) {
+    let jsonData = {
+        id: "encrypt",
+        data: data
+    };
+
+    await openCryptoWindow(jsonData);
+}
+
+async function decryptWithTide(data) {
+    let jsonData = {
+        id: "decrypt",
+        data: data
+    };
+
+    await openCryptoWindow(jsonData);
 }
 
 let cryptoWindow: BrowserWindow | null;
 
-async function openCryptoWindow(data: any) {
-    const jwt = tideJWT;
+async function openCryptoWindow(jsonData: any) {
+    //if (cryptoWindow !== null) { cryptoWindow.close(); };
 
     cryptoWindow = new BrowserWindow({
         width: 800,
@@ -113,24 +135,14 @@ async function openCryptoWindow(data: any) {
             sandbox: false,
             preload: path.join(__dirname, "../../source/main/cryptoPreload.js")
         }
-        // Add other window options as needed
     });
 
-    // Load content into the authentication window
+    // Load content into the crypto window
     await cryptoWindow.loadFile("./source/main/crypto.html");
-    console.log("Data to Fill: ", data);
-    cryptoWindow.webContents.insertText(data);
 
-    cryptoWindow.webContents.send("fromMain", jwt);
+    jsonData.token = tideJWT;
 
-    // cryptoWindow.webContents.insertCSS('input {display:none;}');
-
-    // // Handle window closed event
-    // cryptoWindow.on("closed", () => {
-    //     cryptoWindow = null;
-    //     // Proceed with the main window after the authentication window is closed
-    //     openMainWindow();
-    // });
+    await cryptoWindow.webContents.send("fromMain", JSON.stringify(jsonData));
 
     // Handle window ready-to-show event
     cryptoWindow.once("ready-to-show", () => {
