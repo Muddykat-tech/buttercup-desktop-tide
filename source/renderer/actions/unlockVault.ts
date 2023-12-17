@@ -9,6 +9,7 @@ import { t } from "../../shared/i18n/trans";
 
 export async function unlockVaultSource(sourceID: VaultSourceID): Promise<boolean> {
     const [password, biometricsEnabled, usedBiometrics] = await getPrimaryPassword(sourceID);
+    //password = '123';
     if (!password) return false;
     setBusy(true);
     logInfo(`Unlocking source: ${sourceID}`);

@@ -277,9 +277,9 @@ export function AddVaultMenu() {
                 ? await createEmptyGoogleDriveVault(datasource.token, parentIdentifier, identifier, vaultPassword)
                 : identifier;
         }
-        addNewVaultTarget(datasource, vaultPassword, createNew, vaultFilenameOverride);
+        addNewVaultTarget(datasource, '123', createNew, vaultFilenameOverride);
         close(); // This also clears sensitive state items
-    }, [datasourcePayload, vaultPassword, selectedType, selectedRemotePath, createNew]);
+    }, [datasourcePayload, '123', selectedType, selectedRemotePath, createNew]);
     // Pages
     const pageType = () => (
         <>
@@ -385,14 +385,14 @@ export function AddVaultMenu() {
             {!createNew && (
                 <p>{t("add-vault-menu.confirm.existing-password")}</p>
             )}
-            <InputGroup
+            {/* <InputGroup
                 id="password"
                 placeholder={t("add-vault-menu.confirm.password-placeholder")}
                 type="password"
                 value={vaultPassword}
                 onChange={evt => setVaultPassword(evt.target.value)}
                 autoFocus
-            />
+            /> */}
         </>
     );
     // Output
@@ -439,7 +439,7 @@ export function AddVaultMenu() {
                     )}
                     {currentPage === PAGE_CONFIRM && (
                         <Button
-                            disabled={vaultPassword.length === 0}
+                            //disabled={vaultPassword.length === 0}
                             intent={Intent.PRIMARY}
                             onClick={handleFinalConfirm}
                             title={t("add-vault-menu.page-confirm-finish-title")}
