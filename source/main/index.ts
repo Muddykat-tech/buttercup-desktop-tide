@@ -92,13 +92,16 @@ IPC.connectTo("cryptoServer", () => {
 export async function handleCoreDataParse(jsonData) {
     let data = JSON.parse(jsonData);
     let identifier = data.id;
+    let returnValue = data.data;
+
+    console.log("Return Value: " + returnValue);
 
     switch (identifier) {
         case "encrypt":
-            IPC.of.cryptoServer.emit("encrypt", jsonData, "Encrypted!");
+            IPC.of.cryptoServer.emit("encrypt", returnValue, "Encrypted!");
             break;
         case "decrypt":
-            IPC.of.cryptoServer.emit("decrypt", jsonData, "Decrypted!");
+            IPC.of.cryptoServer.emit("decrypt", returnValue, "Decrypted!");
             break;
     }
 }

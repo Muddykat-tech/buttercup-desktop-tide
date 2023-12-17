@@ -7,13 +7,13 @@
 
 <body>
     <div>
-        <input type="text" name="data" id="data" autofocus/>
+        <input type="text" name="data" id="data" autofocus />
     </div>
     <!-- <button id="click" onclick="Tidify()">Tidify</button> -->
 </body>
 <script type="module">
     import { Heimdall, TidePromise, FieldData } from "https://unpkg.com/heimdall-tide@0.0.50-test/src/heimdall.js";
-    
+
     //Channel to send and receive must be whitelisted in the preload.js file
     // TO send data
     //window.api.send("toMain", param);
@@ -37,7 +37,7 @@
 
     window.api.receive("fromMain", async (sentData) => {
         let data = JSON.parse(sentData);
-        console.log(typeof(data));
+        console.log(typeof (data));
         console.log(data);
 
         let identity = data.id;
@@ -73,6 +73,8 @@
             const encryptedValues = await tidePromise.promise;
 
             jsonData.data = encryptedValues;
+            console.log("Encrypted data " + jsonData.data);
+            document.getElementById("data").innerHTML = jsonData.data;
             window.api.send('toMain', JSON.stringify(jsonData));
         }
 
@@ -81,6 +83,7 @@
     }
 
     async function decrypt(jsonData) {
+        console.log("In decrypt function in crypto window!");
         let jwt = jsonData.token;
         let data = jsonData.data;
 
@@ -93,14 +96,15 @@
         const params = [jwt, fieldData, tidePromise];
 
         const tideButtonAction = async function (params) {
-            
 
             heimdall.TESTdecryptUserDataTEST(params); // describe what we want the tide button to do
             const decryptedValues = await tidePromise.promise; // the security of doing this is suspect! ~Muddykat
 
-            document.getElementById('data').innerHTML = decryptedValues;
+            console.log(decryptedValues);
 
             jsonData.data = decryptedValues;
+            console.log("Decrypted data: " + jsonData.data);
+            document.getElementById("data").innerHTML = jsonData.data;
             window.api.send('toMain', JSON.stringify(jsonData));
         }
 
