@@ -78,14 +78,17 @@
         }
 
         const tideButton = await heimdall.AddTideButton(tideButtonAction, params); // returns Tide Button for you to stylise
-        const encryptedValues = await tidePromise.promise;
-        tideButton.remove();
+        tideButton.click();
+        const encryptedValues = await tidePromise.promise
+
+        
 
         console.log("Values Encrypted? ", encryptedValues);
         jsonData.data = JSON.stringify(encryptedValues);
         console.log("Values Encrypted2? ", jsonData.data);
 
         sendDataToMainProcess(jsonData);
+        window.close();
     }
 
     async function decrypt(jsonData) {
@@ -100,8 +103,10 @@
         }
 
         const tideButton2 = heimdall.AddTideButton(tideButtonAction2, params2); // returns Tide Button for you to stylise
+        tideButton2.click();
         const decrypted = await tidePromise2.promise; // the security of doing this is suspect! ~Muddykat
-        tideButton2.remove();
+        
+        
 
         const fieldData2 = new FieldData(["vaultdata"]);
         fieldData2.addManyWithTag(decrypted);
@@ -112,6 +117,7 @@
         jsonData.data = JSON.stringify(returnData);
 
         sendDataToMainProcess(jsonData);
+        window.close();
     }
 
 </script>
