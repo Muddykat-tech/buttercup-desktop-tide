@@ -1,4 +1,4 @@
-import { app, BrowserWindow, ipcRenderer } from "electron";
+import { app, BrowserWindow, ipcMain, ipcRenderer } from "electron";
 import { initialize as initialiseElectronRemote } from "@electron/remote/main";
 import "./ipc";
 import { initialise } from "./services/init";
@@ -12,8 +12,68 @@ import { tideJWT } from "./services/tokenValidation";
 import path from "path";
 
 let authenticationWindow: BrowserWindow | null;
-const { ipcMain } = require("electron");
-const IPC = require("@achrinza/node-ipc").default;
+import ipc from "@achrinza/node-ipc";
+import { isArray } from "util";
+
+// IPC Heimdall Events for encryption/decryption
+ipc.config.id = 'heimdallserver';
+ipc.config.retry = 1500;
+ipc.config.silent = true;
+ipc.config.port = 8001;
+
+// Create an IPC server
+ipc.serve(() => {
+    ipc.server.on('start', () => {
+        console.log('Heimdall front-end server started');
+        // Listen for messages from the main process
+        ipc.server.on('decrypt', async (data, socket) => {
+            try {
+                // Perform encryption or any necessary processing
+                console.log('Attempting to decrypt sent data', data);
+                let jsonData = { id: 'decrypt', data: data };
+
+                let response = await handleCoreDataParse(JSON.stringify(jsonData));
+
+                // Ensure the response is in the expected format before emitting
+                // Emitting the 'encrypt-response' event to the specific socket
+                if (socket) {
+                    console.log("Sending Decrypted Data to crypto.ts");
+                    console.log("Sending response: ", response);
+                    ipc.server.broadcast('decrypt-response', response);
+                } else {
+                    console.error('Socket is not available.');
+                }
+            } catch (error) {
+                console.error('Error occurred during decryption:', error);
+                // Handle or log the error appropriately
+            }
+        });
+
+        ipc.server.on('encrypt', async (data, socket) => {
+            try {
+                // Perform encryption or any necessary processing
+                console.log('Attempting to encrypt sent data', data);
+                let jsonData = { id: 'encrypt', data: data };
+                let response = await handleCoreDataParse(JSON.stringify(jsonData));
+
+                // Ensure the response is in the expected format before emitting
+                // Emitting the 'encrypt-response' event to the specific socket
+                if (socket) {
+                    console.log("Sending Encrypted Data to crypto.ts");
+                    ipc.server.broadcast('encrypt-response', response);
+                    
+                } else {
+                    console.error('Socket is not available.');
+                }
+            } catch (error) {
+                console.error('Error occurred during encryption:', error);
+                // Handle or log the error appropriately
+            }
+        });
+    });
+});
+// Start listening on a specified path or default path
+ipc.server.start();
 
 logInfo("Application starting");
 
@@ -72,60 +132,113 @@ app.on("activate", () => {
 // ** Encryption and Decryption using Tide
 // **
 
-IPC.config.id = "cryptoClient";
-IPC.config.retry = 1500;
-IPC.config.silent = true;
-IPC.connectTo("cryptoServer", () => {
-    IPC.of.cryptoServer.on("message", (data) => {
-        console.log("Received data - frontend", data);
-    });
-    IPC.of.cryptoServer.on("encrypt", (data) => {
-        console.log("Received data in frontend for encrypting", data);
-        encryptWithTide(data);
-    });
-    IPC.of.cryptoServer.on("decrypt", (data) => {
-        console.log("Received data in frontend for decrypting", data);
-        decryptWithTide(data);
-    });
-});
+async function handleCoreDataParse(jsonData) {
 
-export async function handleCoreDataParse(jsonData) {
-    let data = JSON.parse(jsonData);
-    let identifier = data.id;
+    return new Promise((resolve, reject) => {
+        try {
+            let data = JSON.parse(jsonData);
+            let identifier = data.id;
 
-    switch (identifier) {
-        case "encrypt":
-            IPC.of.cryptoServer.emit("encrypt", jsonData, "Encrypted!");
-            break;
-        case "decrypt":
-            IPC.of.cryptoServer.emit("decrypt", jsonData, "Decrypted!");
-            break;
+            switch (identifier) {
+                case "encrypt":
+                    encryptWithTide(data)
+                        .then((encryptedData) => {
+                            resolve(encryptedData);
+                        })
+                        .catch((error) => {
+                            reject(error);
+                        });
+                    break;
+
+                case "decrypt":
+                    decryptWithTide(data)
+                        .then((decryptedData) => {
+                            resolve(decryptedData);
+                        })
+                        .catch((error) => {
+                            reject(error);
+                        });
+                    break;
+
+                default:
+                    reject("Invalid identifier");
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+}
+
+interface DataItem {
+    [key: string]: number;
+}
+
+function convertToAsciiString(data: unknown): string {
+    if (Array.isArray(data)) {
+        const dataArray = data as DataItem[];
+        let asciiString = '';
+        dataArray.forEach(item => {
+            Object.values(item).forEach(value => {
+                asciiString += String.fromCharCode(value);
+            });
+        });
+        return asciiString;
     }
+    return ''; // Handle other cases where data is not in the expected format
 }
 
-async function encryptWithTide(data) {
-    let jsonData = {
-        id: "encrypt",
-        data: data
-    };
+function convertToUint8Array(asciiString: string): Uint8Array {
+    const numericArray: number[] = [];
 
-    await openCryptoWindow(jsonData);
+    for (let i = 0; i < asciiString.length; i++) {
+        const charCode = asciiString.charCodeAt(i);
+        numericArray.push(charCode);
+    }
+
+    return new Uint8Array(numericArray);
 }
 
-async function decryptWithTide(data) {
-    let jsonData = {
-        id: "decrypt",
-        data: data
-    };
 
-    await openCryptoWindow(jsonData);
+async function encryptWithTide(data): Promise<String> {
+    return new Promise((resolve, reject) => {
+        openCryptoWindow(data)
+            .then((encryptedData) => {
+                console.log("Encrypted Data Got: ", encryptedData);
+                let encryptionText = convertToAsciiString(encryptedData);
+                console.log("Managed to acquire encrypted data: ", encryptionText);
+
+                resolve(encryptionText); // Resolve with the encrypted data
+            })
+            .catch((error) => {
+                reject(error); // Reject if there's an error in encryption
+            });
+    });
+}
+async function decryptWithTide(data): Promise<string> {
+    
+    let cipherText = data.data;
+    console.log("Data to decrypt: ", cipherText);
+    let uint8Array = convertToUint8Array(cipherText);
+    let serializedData = JSON.stringify(Array.from(uint8Array));
+    data.data = serializedData;
+    console.log("Converted to format Heimdall needs: ", serializedData);
+
+    return new Promise((resolve, reject) => {
+        openCryptoWindow(data)
+            .then((decryptedData) => {
+                decryptedData = decryptedData;
+                console.log("Recieved Resonse from decryption:", decryptedData);
+                resolve(decryptedData); // Resolve with the decrypted data
+            })
+            .catch((error) => {
+                reject(error); // Reject if there's an error in decryption
+            });
+    });
 }
 
 let cryptoWindow: BrowserWindow | null;
 
-async function openCryptoWindow(jsonData: any) {
-    //if (cryptoWindow !== null) { cryptoWindow.close(); };
-
+async function openCryptoWindow(jsonData: any): Promise<string> {
     cryptoWindow = new BrowserWindow({
         width: 800,
         height: 600,
@@ -150,7 +263,27 @@ async function openCryptoWindow(jsonData: any) {
         cryptoWindow.show();
     });
 
-    cryptoWindow.setOpacity(0);
+    //cryptoWindow.setOpacity(0); 
+    return new Promise(async (resolve, reject) => { 
+        
+        console.log('Waiting for response')
+        let response = 'waiting';
+
+        ipcMain.once("toMain", async (event, jsonData) => {
+            let data = JSON.parse(jsonData);
+            console.log("Got Data from CryptoPage sending to core!", data);
+            switch (data.id) {
+                case "encrypt":
+                    response = JSON.parse(data.data);
+                    break;
+                case "decrypt":
+                    response = JSON.parse(data.data);
+                    console.log("Pass Check 3")
+                    break;
+            }
+            resolve(response);
+        });
+    });
 }
 
 // **

@@ -12,3 +12,4 @@ dev-app-update.yml
 .idea/modules.xml
 .idea/misc.xml
 .idea/.name
+package-lock.json

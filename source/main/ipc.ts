@@ -65,7 +65,6 @@ import {
     VaultSettingsLocal
 } from "./types";
 import { validateAndUpdate } from "./services/tokenValidation";
-import { handleCoreDataParse } from "./index";
 
 // **
 // ** IPC Events
@@ -81,11 +80,6 @@ ipcMain.on("heimdall-response", async (event, data) => {
     } else {
         console.error("Failed to Validate JWT");
     }
-});
-
-ipcMain.on("toMain", async (event, data) => {
-    handleCoreDataParse(data);
-    console.log("Got Data from CryptoPage sending to core!");
 });
 
 ipcMain.on("add-vault-config", async (evt, payload) => {
