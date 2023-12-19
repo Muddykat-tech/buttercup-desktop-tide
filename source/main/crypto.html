@@ -106,13 +106,11 @@
         tideButton2.click();
         const decrypted = await tidePromise2.promise; // the security of doing this is suspect! ~Muddykat
         
-        
 
         const fieldData2 = new FieldData(["vaultdata"]);
         fieldData2.addManyWithTag(decrypted);
         let returnData = fieldData2.getAllWithIds(["vaultdata"])[0].Data;
         console.log("Test: ", returnData);
-        
 
         jsonData.data = JSON.stringify(returnData);
 
