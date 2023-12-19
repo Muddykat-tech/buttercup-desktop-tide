@@ -380,10 +380,10 @@ export function AddVaultMenu() {
     const pageConfirm = () => (
         <>
             {createNew && (
-                <p>{t("add-vault-menu.confirm.new-password")}</p>
+                <p>{t("add-vault-menu.confirm.new-vault")}</p>
             )}
             {!createNew && (
-                <p>{t("add-vault-menu.confirm.existing-password")}</p>
+                <p>{t("add-vault-menu.confirm.existing-vault")}</p>
             )}
             {/* <InputGroup
                 id="password"

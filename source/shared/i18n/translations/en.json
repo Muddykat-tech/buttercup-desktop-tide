@@ -16,8 +16,8 @@
         "choose-file-prompt": "Choose a vault file or create a new vault:",
         "choose-type-prompt": "Choose a vault type to add:",
         "confirm": {
-            "existing-password": "Enter the primary vault password:",
-            "new-password": "Enter a new primary vault password:",
+            "existing-vault": "Confirm adding vault ?",
+            "new-vault": "Confirm adding new vault ?",
             "password-placeholder": "Vault password..."
         },
         "google-auth-button": "Authenticate",
