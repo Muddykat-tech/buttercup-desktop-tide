@@ -37,10 +37,9 @@ async function validateToken(token: string): Promise<boolean> {
 }
 
 tokenEvents.on("updateToken", (newToken) => {
-    console.log(`Token updated: ${newToken}`);
-
-    const window = BrowserWindow.getFocusedWindow();
-    window.webContents.send("notify-success", "Tide JWT Valid");
+    ///console.log(`Token updated: ${newToken}`);
+    //const window = BrowserWindow.getFocusedWindow();
+    //window.webContents.send("notify-success", "Tide JWT Valid");
 });
 
 tokenEvents.on("invalidJWT", (errorMessage) => {
