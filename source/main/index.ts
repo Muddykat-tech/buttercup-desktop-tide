@@ -88,8 +88,8 @@ function openAuthenticationWindow() {
         width: 800,
         height: 600,
         webPreferences: {
-            nodeIntegration: false, // is default value after Electron v5
-            contextIsolation: true, // protect against prototype pollution
+            nodeIntegration: false,
+            contextIsolation: true,
             sandbox: false,
             preload: path.join(__dirname, "../../source/main/preload.js") // use a preload script
         }

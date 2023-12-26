@@ -64,11 +64,17 @@ import {
     SearchResult,
     VaultSettingsLocal
 } from "./types";
-import { validateAndUpdate } from "./services/tokenValidation";
+import { validateAndUpdate, tideJWT } from "./services/tokenValidation";
 
 // **
 // ** IPC Events
 // **
+
+ipcMain.on("request-jwt", (event) => {
+    const jwt = tideJWT;
+
+    event.reply("request-jwt:response", jwt);
+})
 
 ipcMain.on("heimdall-response", async (event, data) => {
     const receivedData = JSON.parse(data);

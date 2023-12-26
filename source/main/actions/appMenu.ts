@@ -29,7 +29,7 @@ async function getContextMenu(): Promise<Menu> {
     const currentVaultPrefix = [];
     const biometricsSupported = await supportsBiometricUnlock();
     const iconsPath = path.join(__dirname, "..", "../resources/build/icons"); // Path to your icons folder
-    const iconPath = path.join(iconsPath, "tide-icon.png"); // Adjust the filename if it's different
+    const iconPath = path.join(iconsPath, "tide-icon-16x16.png"); // Adjust the filename if it's different
     const nativeImage = require("electron").nativeImage;
     const appIcon = nativeImage.createFromPath(iconPath);
 

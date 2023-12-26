@@ -20,6 +20,8 @@ export async function addVaultFromPayload(payload: AddVaultPayload): Promise<Vau
         /* falls-through */
         case SourceType.WebDAV:
         /* falls-through */
+        case SourceType.DB:
+        /* falls-through */
         case SourceType.File: {
             credentials = Credentials.fromDatasource(
                 payload.datasourceConfig,

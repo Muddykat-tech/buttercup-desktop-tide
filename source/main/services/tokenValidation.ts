@@ -1,7 +1,6 @@
 import { EventEmitter } from "events";
-import { openMainWindow } from "./windows";
 import { updateAppMenu } from "../actions/appMenu";
-import { BrowserWindow } from "electron";
+import { BrowserWindow, ipcMain } from "electron";
 
 const tokenEvents = new EventEmitter();
 let tideJWT = "";
@@ -40,6 +39,7 @@ tokenEvents.on("updateToken", (newToken) => {
     ///console.log(`Token updated: ${newToken}`);
     //const window = BrowserWindow.getFocusedWindow();
     //window.webContents.send("notify-success", "Tide JWT Valid");
+    ipcMain.emit("jwt-update", newToken);
 });
 
 tokenEvents.on("invalidJWT", (errorMessage) => {

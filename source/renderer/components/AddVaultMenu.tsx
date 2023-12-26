@@ -11,13 +11,17 @@ import { testWebDAV } from "../actions/webdav";
 import { getFSInstance } from "../library/fsInterface";
 import { FileChooser } from "./standalone/FileChooser";
 import { addNewVaultTarget, getFileVaultParameters } from "../actions/addVault";
-import { showError } from "../services/notifications";
+import { showError, showSuccess } from "../services/notifications";
 import { authenticateGoogleDrive } from "../services/authGoogle";
 import { createEmptyVault as createEmptyGoogleDriveVault } from "../services/googleDrive";
 import { showWarning } from "../services/notifications";
 import { getIconForProvider } from "../library/icons";
 import { t } from "../../shared/i18n/trans";
 import { DatasourceConfig, SourceType } from "../types";
+import { testOnlineDB } from '../actions/onlineDatabase';
+import { logInfo } from "../library/log";
+import { ipcRenderer } from "electron";
+import { isUndefined } from "util";
 
 interface WebDAVCredentialsState {
     url: string;
@@ -25,16 +29,33 @@ interface WebDAVCredentialsState {
     password: string;
 }
 
+interface DBCredentialsState {
+    url: string;
+    uuid: string;
+}
+
 const { useCallback, useEffect, useState } = React;
 
 const EMPTY_DATASOURCE_CONFIG = { type: null };
 const EMPTY_WEBDAV_CREDENTIALS: WebDAVCredentialsState = { url: "", username: "", password: "" };
+const EMPTY_DB_CREDENTIALS: DBCredentialsState = { url: "", uuid: ""};
+let DB_TOKEN = { jwt: null };
 const PAGE_TYPE = "type";
 const PAGE_AUTH = "auth";
 const PAGE_CHOOSE = "choose";
 const PAGE_CONFIRM = "confirm";
 
+export function setDBToken(token: string) {
+    console.log("Updated DB Token")
+    DB_TOKEN = { jwt: token };
+}
+
 const VAULT_TYPES = [
+    {
+        i18n: "source-type.db",
+        type: SourceType.DB,
+        icon: getIconForProvider(SourceType.DB)
+    },
     {
         i18n: "source-type.file",
         type: SourceType.File,
@@ -105,6 +126,23 @@ const WideFormGroup = styled(FormGroup)`
         width: 130px !important;
     }
 `;
+function getUID() {
+    ipcRenderer.send("request-jwt");
+    ipcRenderer.once("request-jwt:response", (event, jwt) => {
+        setDBToken(jwt);
+    });
+    let jwt = DB_TOKEN.jwt;
+    var p = jwt.split(".")[1];
+    return JSON.parse(atob(base64UrlToBase64(p))).uid;
+}
+function base64UrlToBase64(base64Url) {
+    if (base64Url === null) return;
+    let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    while (base64.length % 4) {
+        base64 += '=';
+    }
+    return base64;
+}
 
 export function AddVaultMenu() {
     const showAddVault = useHookState(SHOW_ADD_VAULT);
@@ -120,6 +158,8 @@ export function AddVaultMenu() {
     const [authenticatingGoogleDrive, setAuthenticatingGoogleDrive] = useState(false);
     const [googleDriveOpenPerms, setGoogleDriveOpenPerms] = useState(false);
     const [vaultFilenameOverride, setVaultFilenameOverride] = useState(null);
+    const [dbCredentials, setDbCredentials] = useState<DBCredentialsState>({ ...EMPTY_DB_CREDENTIALS });
+
     useEffect(() => {
         const newValue = showAddVault.get();
         if (previousShowAddVault !== newValue) {
@@ -135,6 +175,7 @@ export function AddVaultMenu() {
         setCurrentPage(PAGE_TYPE);
         setDatasourcePayload({ ...EMPTY_DATASOURCE_CONFIG });
         setWebDAVCredentials({ ...EMPTY_WEBDAV_CREDENTIALS });
+        setDbCredentials({ ...EMPTY_DB_CREDENTIALS });
         setVaultPassword("");
         setGoogleDriveOpenPerms(false);
         setAuthenticatingGoogleDrive(false);
@@ -189,6 +230,12 @@ export function AddVaultMenu() {
                 type
             });
             setCurrentPage(PAGE_AUTH);
+        } else if (type === SourceType.DB) {
+            setDatasourcePayload({
+                ...datasourcePayload,
+                type
+            });
+            setCurrentPage(PAGE_AUTH);
         }
     }, [datasourcePayload]);
     const handleAuthSubmit = useCallback(async () => {
@@ -232,10 +279,43 @@ export function AddVaultMenu() {
                 ...datasourcePayload,
                 ...newPayload
             });
+
             setFsInstance(getFSInstance(SourceType.WebDAV, newPayload));
             setCurrentPage(PAGE_CHOOSE);
+        } else if (selectedType === SourceType.DB) {
+            setBusy(true);
+            try {
+                ipcRenderer.send("request-jwt");
+                await ipcRenderer.once("request-jwt:response", (event, jwt) => {
+                    setDBToken(jwt);
+                });
+                await testOnlineDB(dbCredentials.url, DB_TOKEN.jwt);
+                showSuccess("Connection to Database Successful")
+            } catch (err) {
+                showError(err.message);
+                setBusy(false);
+                return;
+            }
+            setBusy(false);
+            const newPayload = {
+                endpoint: dbCredentials.url
+            };
+            if (dbCredentials.uuid) {
+                Object.assign(newPayload, {
+                    token: dbCredentials.uuid
+                });
+            }
+            setDatasourcePayload({
+                ...datasourcePayload,
+                ...newPayload
+            });
+
+            console.log("Payload Contents: " + JSON.stringify(newPayload));
+
+            setFsInstance(getFSInstance(SourceType.DB, newPayload));
+            setCurrentPage(PAGE_CHOOSE);
         }
-    }, [selectedType, datasourcePayload, webdavCredentials, googleDriveOpenPerms]);
+    }, [selectedType, datasourcePayload, webdavCredentials, dbCredentials, googleDriveOpenPerms]);
     const handleSelectedPathChange = useCallback((parentIdentifier: string | null, identifier: string, isNew: boolean, fileName: string | null) => {
         if (selectedType === SourceType.GoogleDrive) {
             setSelectedRemotePath(JSON.stringify([parentIdentifier, identifier]));
@@ -261,7 +341,13 @@ export function AddVaultMenu() {
             // if we need to create a new file or not. Google Drive uses file IDs and not
             // names, so the data in state potentially isn't correct yet.
             setCurrentPage(PAGE_CONFIRM);
-        } else if (selectedType ===  SourceType.WebDAV) {
+        } else if (selectedType === SourceType.WebDAV) {
+            setDatasourcePayload({
+                ...datasourcePayload,
+                path: selectedRemotePath
+            });
+            setCurrentPage(PAGE_CONFIRM);
+        } else if (selectedType === SourceType.DB) {
             setDatasourcePayload({
                 ...datasourcePayload,
                 path: selectedRemotePath
@@ -369,6 +455,25 @@ export function AddVaultMenu() {
                     </WideFormGroup>
                 </>
             )}
+            {selectedType === SourceType.DB && (
+                <>
+                    <WideFormGroup
+                        inline
+                        label={t("add-vault-menu.loader.db-auth.url-label")}
+                    >
+                        <InputGroup
+                            placeholder="https://..."
+                            onChange={evt => setDbCredentials({
+                                ...dbCredentials,
+                                url: evt.target.value,
+                                uuid: getUID()
+                            })}
+                            value={dbCredentials.url}
+                            autoFocus
+                        />
+                    </WideFormGroup>
+                </>
+            )}
         </>
     );
     const pageChoose = () => (
@@ -435,6 +540,16 @@ export function AddVaultMenu() {
                             title={t("add-vault-menu.webdav-continue-title")}
                         >
                             {t("add-vault-menu.webdav-continue")}
+                        </Button>
+                    )}
+                    {currentPage === PAGE_AUTH && selectedType === SourceType.DB && (
+                        <Button
+                            disabled={!dbCredentials.url}
+                            intent={Intent.PRIMARY}
+                            onClick={handleAuthSubmit}
+                            title={t("add-vault-menu.db-continue-title")}
+                        >
+                            {t("add-vault-menu.db-continue")}
                         </Button>
                     )}
                     {currentPage === PAGE_CONFIRM && (

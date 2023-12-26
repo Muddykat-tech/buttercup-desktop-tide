@@ -78,3 +78,36 @@ export async function getFileVaultParameters(): Promise<{
         };
     }
 }
+
+// TODO reroute this to the online DataBase!
+export async function getFileVaultParametersDB(): Promise<{
+    filename: string;
+    createNew: boolean;
+} | null> {
+    showNewFilePrompt(true);
+    const emitter = getCreateNewFilePromptEmitter();
+    const choice: NewVaultChoice = await new Promise<NewVaultChoice>((resolve) => {
+        const callback = (choice: NewVaultChoice) => {
+            resolve(choice);
+            emitter.removeListener("choice", callback);
+        };
+        emitter.once("choice", callback);
+    });
+    showNewFilePrompt(false);
+    if (!choice) return null;
+    if (choice === "new") {
+        const filename = await ipcRenderer.invoke("get-new-vault-filename");
+        if (!filename) return null;
+        return {
+            filename,
+            createNew: true
+        };
+    } else {
+        const filename = await ipcRenderer.invoke("get-existing-vault-filename");
+        if (!filename) return null;
+        return {
+            filename,
+            createNew: false
+        };
+    }
+}

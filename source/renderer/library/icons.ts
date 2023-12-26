@@ -6,6 +6,7 @@ const ICON_GOOGLEDRIVE = require("../../../resources/images/googledrive-256.png"
 const ICON_WEBDAV = require("../../../resources/images/webdav-256.png").default;
 
 const ICON_ERROR = require("../../../resources/icons/error.png").default;
+const ICON_TIDE = require("../../../resources/images/tide-icon-256.png").default;
 
 export function getIconForProvider(provider: SourceType): string {
     switch (provider) {
@@ -17,6 +18,8 @@ export function getIconForProvider(provider: SourceType): string {
             return ICON_GOOGLEDRIVE;
         case SourceType.WebDAV:
             return ICON_WEBDAV;
+        case SourceType.DB:
+            return ICON_TIDE;
         default:
             return ICON_ERROR;
     }

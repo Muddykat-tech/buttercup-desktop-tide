@@ -39,6 +39,9 @@
                 "url-label": "WebDAV Service",
                 "username-label": "Username",
                 "username-plc": "WebDAV Username"
+            },
+            "db-auth": {
+                "url-label": "Database URL"
             }
         },
         "page-choose-next": "Next",
@@ -49,7 +52,9 @@
         "page-confirm-finish-title": "Confirm vault addition",
         "title": "Add Vault",
         "webdav-continue": "Next",
-        "webdav-continue-title": "Connect using WebDAV"
+        "webdav-continue-title": "Connect using WebDAV",
+        "db-continue": "Next",
+        "db-continue-title": "Connect using Tide"
     },
     "add-vault-page": {
         "cta-button": "Add Vault",
@@ -292,7 +297,8 @@
         "dropbox": "Dropbox",
         "file": "File",
         "googledrive": "Google Drive",
-        "webdav": "WebDAV"
+        "webdav": "WebDAV",
+        "db": "Tide Database"
     },
     "theme": {
         "dark": "Dark",

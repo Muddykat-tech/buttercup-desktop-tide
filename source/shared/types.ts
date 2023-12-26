@@ -49,7 +49,8 @@ export enum SourceType {
     Dropbox = "dropbox",
     File = "file",
     GoogleDrive = "googledrive",
-    WebDAV = "webdav"
+    WebDAV = "webdav",
+    DB = "Online Database"
 }
 
 export enum ThemeSource {
