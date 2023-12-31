@@ -31,24 +31,18 @@ interface WebDAVCredentialsState {
 
 interface DBCredentialsState {
     url: string;
-    uuid: string;
+    token: string;
 }
 
 const { useCallback, useEffect, useState } = React;
 
 const EMPTY_DATASOURCE_CONFIG = { type: null };
 const EMPTY_WEBDAV_CREDENTIALS: WebDAVCredentialsState = { url: "", username: "", password: "" };
-const EMPTY_DB_CREDENTIALS: DBCredentialsState = { url: "", uuid: ""};
-let DB_TOKEN = { jwt: null };
+const EMPTY_DB_CREDENTIALS: DBCredentialsState = { url: "", token: ""};
 const PAGE_TYPE = "type";
 const PAGE_AUTH = "auth";
 const PAGE_CHOOSE = "choose";
 const PAGE_CONFIRM = "confirm";
-
-export function setDBToken(token: string) {
-    console.log("Updated DB Token")
-    DB_TOKEN = { jwt: token };
-}
 
 const VAULT_TYPES = [
     {
@@ -126,23 +120,8 @@ const WideFormGroup = styled(FormGroup)`
         width: 130px !important;
     }
 `;
-function getUID() {
-    ipcRenderer.send("request-jwt");
-    ipcRenderer.once("request-jwt:response", (event, jwt) => {
-        setDBToken(jwt);
-    });
-    let jwt = DB_TOKEN.jwt;
-    var p = jwt.split(".")[1];
-    return JSON.parse(atob(base64UrlToBase64(p))).uid;
-}
-function base64UrlToBase64(base64Url) {
-    if (base64Url === null) return;
-    let base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    while (base64.length % 4) {
-        base64 += '=';
-    }
-    return base64;
-}
+
+
 
 export function AddVaultMenu() {
     const showAddVault = useHookState(SHOW_ADD_VAULT);
@@ -231,10 +210,22 @@ export function AddVaultMenu() {
             });
             setCurrentPage(PAGE_AUTH);
         } else if (type === SourceType.DB) {
+            setBusy(true);
+            ipcRenderer.send("request-jwt");
+            let token = await new Promise<string>((resolve) => {
+                ipcRenderer.once("request-jwt:response", (event, jwt) => {
+                    resolve(jwt);
+                });
+            });
+            console.log("GOT TOKEN: ", token);
+            setBusy(false);
+            
             setDatasourcePayload({
                 ...datasourcePayload,
-                type
+                type,
+                token
             });
+
             setCurrentPage(PAGE_AUTH);
         }
     }, [datasourcePayload]);
@@ -287,9 +278,9 @@ export function AddVaultMenu() {
             try {
                 ipcRenderer.send("request-jwt");
                 await ipcRenderer.once("request-jwt:response", (event, jwt) => {
-                    setDBToken(jwt);
+                    setDbCredentials({ token: jwt, ...dbCredentials });
                 });
-                await testOnlineDB(dbCredentials.url, DB_TOKEN.jwt);
+                await testOnlineDB(dbCredentials.url, dbCredentials.token);
                 showSuccess("Connection to Database Successful")
             } catch (err) {
                 showError(err.message);
@@ -300,9 +291,9 @@ export function AddVaultMenu() {
             const newPayload = {
                 endpoint: dbCredentials.url
             };
-            if (dbCredentials.uuid) {
+            if (dbCredentials.token) {
                 Object.assign(newPayload, {
-                    token: dbCredentials.uuid
+                    token: dbCredentials.token
                 });
             }
             setDatasourcePayload({
@@ -350,7 +341,8 @@ export function AddVaultMenu() {
         } else if (selectedType === SourceType.DB) {
             setDatasourcePayload({
                 ...datasourcePayload,
-                path: selectedRemotePath
+                path: selectedRemotePath,
+                token: dbCredentials.token
             });
             setCurrentPage(PAGE_CONFIRM);
         }
@@ -466,7 +458,6 @@ export function AddVaultMenu() {
                             onChange={evt => setDbCredentials({
                                 ...dbCredentials,
                                 url: evt.target.value,
-                                uuid: getUID()
                             })}
                             value={dbCredentials.url}
                             autoFocus

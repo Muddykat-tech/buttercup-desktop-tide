@@ -50,7 +50,7 @@ export enum SourceType {
     File = "file",
     GoogleDrive = "googledrive",
     WebDAV = "webdav",
-    DB = "Online Database"
+    DB = "db"
 }
 
 export enum ThemeSource {

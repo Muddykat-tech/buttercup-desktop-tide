@@ -9,6 +9,8 @@ import { GoogleDriveClient } from "@buttercup/googledrive-client";
 import { DropboxClient } from "@buttercup/dropbox-client";
 import { createClient as createWebdavClient } from "webdav";
 import { SourceType } from "../types";
+import { ButtercupServerClient } from "buttercup-server-client";
+import { ipcRenderer } from "electron";
 
 export interface FSInstanceSettings {
     endpoint?: string;
@@ -38,9 +40,11 @@ export function getFSInstance(type: SourceType, settings: FSInstanceSettings): F
         case SourceType.DB:
             console.log("Source Type WIP file 'fsInterface.ts' requires a new DatabaseClient file to be created in the Core Application.");
             console.log("Setting endpoint as :", settings.endpoint);
+
             return new DBInterface({
                 dbURL: settings.endpoint as string,
-                uuid: settings.token as string
+                uuid: settings.token as string,
+                buttercupServerClient: new ButtercupServerClient(settings.endpoint, settings.token)
             });
         default:
             throw new Error(`Unsupported interface: ${type}`);
