@@ -23,11 +23,14 @@ export async function addVaultFromPayload(payload: AddVaultPayload): Promise<Vau
         case SourceType.DB:
         /* falls-through */
         case SourceType.File: {
+            console.log("connect.ts: payload.datasourceConfig", payload.datasourceConfig);
+            console.log("connect.ts: payload.masterPassword", payload.masterPassword);
             credentials = Credentials.fromDatasource(
                 payload.datasourceConfig,
                 payload.masterPassword
             );
             name = path.basename(payload.datasourceConfig.path).replace(/\.bcup$/i, "");
+            console.log("connect.ts: payload.name", name);
             break;
         }
         default:

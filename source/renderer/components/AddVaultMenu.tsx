@@ -38,11 +38,14 @@ const { useCallback, useEffect, useState } = React;
 
 const EMPTY_DATASOURCE_CONFIG = { type: null };
 const EMPTY_WEBDAV_CREDENTIALS: WebDAVCredentialsState = { url: "", username: "", password: "" };
-const EMPTY_DB_CREDENTIALS: DBCredentialsState = { url: "", token: ""};
+const EMPTY_DB_CREDENTIALS: DBCredentialsState = { url: "", token: "" };
 const PAGE_TYPE = "type";
 const PAGE_AUTH = "auth";
 const PAGE_CHOOSE = "choose";
 const PAGE_CONFIRM = "confirm";
+
+let jwt = "Error";
+
 
 const VAULT_TYPES = [
     {
@@ -139,6 +142,9 @@ export function AddVaultMenu() {
     const [vaultFilenameOverride, setVaultFilenameOverride] = useState(null);
     const [dbCredentials, setDbCredentials] = useState<DBCredentialsState>({ ...EMPTY_DB_CREDENTIALS });
 
+
+
+
     useEffect(() => {
         const newValue = showAddVault.get();
         if (previousShowAddVault !== newValue) {
@@ -161,6 +167,9 @@ export function AddVaultMenu() {
         setVaultFilenameOverride(null);
     }, []);
     const handleVaultTypeClick = useCallback(async type => {
+
+  
+
         setSelectedType(type);
         if (type === SourceType.File) {
             setCurrentPage(PAGE_AUTH);
@@ -211,19 +220,23 @@ export function AddVaultMenu() {
             setCurrentPage(PAGE_AUTH);
         } else if (type === SourceType.DB) {
             setBusy(true);
+
             ipcRenderer.send("request-jwt");
-            let token = await new Promise<string>((resolve) => {
+
+
+            jwt = await new Promise<string>((resolve) => {
                 ipcRenderer.once("request-jwt:response", (event, jwt) => {
                     resolve(jwt);
                 });
             });
-            console.log("GOT TOKEN: ", token);
+
+            console.log("GOT TOKEN: ", jwt);
             setBusy(false);
-            
+
             setDatasourcePayload({
                 ...datasourcePayload,
                 type,
-                token
+                token: jwt
             });
 
             setCurrentPage(PAGE_AUTH);
@@ -274,26 +287,23 @@ export function AddVaultMenu() {
             setFsInstance(getFSInstance(SourceType.WebDAV, newPayload));
             setCurrentPage(PAGE_CHOOSE);
         } else if (selectedType === SourceType.DB) {
-
-            ipcRenderer.send("request-jwt");
-
             setBusy(true);
-            let token = await new Promise<string>((resolve) => {
-                ipcRenderer.once("request-jwt:response", (event, jwt) => {
-                    resolve(jwt);
-                });
-            });
-            console.log("Token in db submission!: ", token);
-            
+
+
+            console.log("Token in db submission!: ", jwt);
+
             await testOnlineDB(dbCredentials.url, dbCredentials.token);
             showSuccess("Connection to Database Successful")
+            setDbCredentials({ ...dbCredentials, token: jwt });
+
             setBusy(false);
-            
+
             const newPayload = {
                 endpoint: dbCredentials.url,
-                token: token
+                token: dbCredentials.token
             };
-            
+
+
             setDatasourcePayload({
                 ...datasourcePayload,
                 ...newPayload
@@ -340,7 +350,7 @@ export function AddVaultMenu() {
             setDatasourcePayload({
                 ...datasourcePayload,
                 path: selectedRemotePath,
-                token: dbCredentials.token
+                // token: dbCredentials.token
             });
             setCurrentPage(PAGE_CONFIRM);
         }
@@ -353,6 +363,7 @@ export function AddVaultMenu() {
                 ? await createEmptyGoogleDriveVault(datasource.token, parentIdentifier, identifier, vaultPassword)
                 : identifier;
         }
+
         addNewVaultTarget(datasource, '123', createNew, vaultFilenameOverride);
         close(); // This also clears sensitive state items
     }, [datasourcePayload, '123', selectedType, selectedRemotePath, createNew]);
@@ -456,6 +467,7 @@ export function AddVaultMenu() {
                             onChange={evt => setDbCredentials({
                                 ...dbCredentials,
                                 url: evt.target.value,
+                                token: jwt
                             })}
                             value={dbCredentials.url}
                             autoFocus
@@ -513,7 +525,7 @@ export function AddVaultMenu() {
                     )}
                     {currentPage === PAGE_AUTH && selectedType === SourceType.GoogleDrive && (
                         <Button
-                        disabled={authenticatingGoogleDrive}
+                            disabled={authenticatingGoogleDrive}
                             intent={Intent.PRIMARY}
                             onClick={handleAuthSubmit}
                             title={t("add-vault-menu.google-auth-button-title")}

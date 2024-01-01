@@ -23,8 +23,11 @@ export async function addNewVaultTarget(
                 error?: string;
                 sourceID?: VaultSourceID;
             };
+            console.log("Source ID from addNewVaultTarget", sourceID);
+            console.log("Value ok from addNewVaultTarget", ok);
+            console.log("Value payload from addNewVaultTarget", payload);
             if (ok) return resolve(sourceID);
-            reject(new Error(`Failed adding vault: ${error}`));
+            reject(new Error(`Failed adding vault Check : ${error}`));
         });
     });
     const payload: AddVaultPayload = {

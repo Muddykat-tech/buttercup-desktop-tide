@@ -74,7 +74,7 @@ ipcMain.on("request-jwt", (event) => {
     const jwt = tideJWT;
 
     event.reply("request-jwt:response", jwt);
-})
+});
 
 ipcMain.on("heimdall-response", async (event, data) => {
     const receivedData = JSON.parse(data);
@@ -90,8 +90,10 @@ ipcMain.on("heimdall-response", async (event, data) => {
 
 ipcMain.on("add-vault-config", async (evt, payload) => {
     const addVaultPayload: AddVaultPayload = JSON.parse(payload);
+    logErr("Inside the event: add-vault-config", JSON.stringify(addVaultPayload));
     try {
         const sourceID = await addVaultFromPayload(addVaultPayload);
+        logErr("SourceID in ipc.ts" + sourceID);
         evt.reply(
             "add-vault-config:reply",
             JSON.stringify({
@@ -101,6 +103,7 @@ ipcMain.on("add-vault-config", async (evt, payload) => {
         );
     } catch (err) {
         console.error(err);
+        logErr("In catch error in ipc.ts");
         evt.reply(
             "add-vault-config:reply",
             JSON.stringify({

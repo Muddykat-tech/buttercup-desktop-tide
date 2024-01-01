@@ -60,14 +60,22 @@ export async function addVault(
     type: SourceType,
     createNew: boolean = false
 ): Promise<VaultSourceID> {
+    console.log("addVault Check1");
     const credsSecure = await sourceCredentials.toSecureString();
+    console.log("addVault Check2");
     const vaultManager = getVaultManager();
+    console.log("addVault Check3");
     const source = new VaultSource(name, type, credsSecure);
+    console.log("addVault Check4");
     await vaultManager.interruptAutoUpdate(async () => {
+        console.log("addVault Check5.1");
         await vaultManager.addSource(source);
+        console.log("addVault Check5.2");
         await source.unlock(passCredentials, { initialiseRemote: createNew });
+        console.log("addVault Check5.3");
         await vaultManager.dehydrateSource(source);
     });
+    console.log("addVault Check6");
     return source.id;
 }
 
