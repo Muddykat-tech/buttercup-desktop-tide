@@ -17,7 +17,6 @@
 
     //TO receive data
     //
-    console.log("Crypto Window")
     const config = {
         vendorPublic: "us7ieal6GOfYgcVJa50cdqp78qBLy6zqv7zvuqbR34U=",
         appOriginText: "securing the vendorurl",
@@ -36,7 +35,6 @@
     window.api.receive("fromMain", async (sentData) => {
         let data = JSON.parse(sentData);
         let identity = data.id;
-        console.log('Job from Main aquired, job type of ', identity)
         switch (identity) {
             case "encrypt":
                 await encrypt(data);
@@ -51,7 +49,6 @@
     }
 
     async function encrypt(jsonData) {
-        console.log("Data Needs to be Encrypted:", jsonData);
 
         let jwt = jsonData.token;
         let data = jsonData.data;
@@ -59,9 +56,6 @@
             data = JSON.parse(jsonData.data);
             if (data.datasource.path !== undefined) {
                 data = JSON.stringify(data);
-            } else {
-                console.log("Other Data", jsonData);
-                console.log("Other Data Parsed", data);
             }
         } catch {
            console.warn("Failed to Parse jsonData.data, this may be okay.")
@@ -81,12 +75,7 @@
         tideButton.click();
         const encryptedValues = await tidePromise.promise
 
-        
-
-        console.log("Values Encrypted? ", encryptedValues);
         jsonData.data = JSON.stringify(encryptedValues);
-        console.log("Values Encrypted2? ", jsonData.data);
-
         sendDataToMainProcess(jsonData);
         window.close();
     }
@@ -110,7 +99,6 @@
         const fieldData2 = new FieldData(["vaultdata"]);
         fieldData2.addManyWithTag(decrypted);
         let returnData = fieldData2.getAllWithIds(["vaultdata"])[0].Data;
-        console.log("Test: ", returnData);
 
         jsonData.data = JSON.stringify(returnData);
 

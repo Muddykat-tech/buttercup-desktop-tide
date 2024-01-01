@@ -13,11 +13,6 @@ import path from "path";
 
 let authenticationWindow: BrowserWindow | null;
 import ipc from "@achrinza/node-ipc";
-import { isArray } from "util";
-
-
-// Register the new Datasource
-
 
 // IPC Heimdall Events for encryption/decryption
 ipc.config.id = 'heimdallserver';
@@ -118,11 +113,6 @@ function openAuthenticationWindow() {
     authenticationWindow.setOpacity(0);
 }
 
-// app.on("window-all-closed", () => {
-//   if (process.platform !== PLATFORM_MACOS) {
-//       app.quit();
-//   }
-// });
 
 app.on("window-all-closed", (event: Event) => {
     event.preventDefault();

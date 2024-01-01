@@ -274,28 +274,26 @@ export function AddVaultMenu() {
             setFsInstance(getFSInstance(SourceType.WebDAV, newPayload));
             setCurrentPage(PAGE_CHOOSE);
         } else if (selectedType === SourceType.DB) {
+
+            ipcRenderer.send("request-jwt");
+
             setBusy(true);
-            try {
-                ipcRenderer.send("request-jwt");
-                await ipcRenderer.once("request-jwt:response", (event, jwt) => {
-                    setDbCredentials({ token: jwt, ...dbCredentials });
+            let token = await new Promise<string>((resolve) => {
+                ipcRenderer.once("request-jwt:response", (event, jwt) => {
+                    resolve(jwt);
                 });
-                await testOnlineDB(dbCredentials.url, dbCredentials.token);
-                showSuccess("Connection to Database Successful")
-            } catch (err) {
-                showError(err.message);
-                setBusy(false);
-                return;
-            }
+            });
+            console.log("Token in db submission!: ", token);
+            
+            await testOnlineDB(dbCredentials.url, dbCredentials.token);
+            showSuccess("Connection to Database Successful")
             setBusy(false);
+            
             const newPayload = {
-                endpoint: dbCredentials.url
+                endpoint: dbCredentials.url,
+                token: token
             };
-            if (dbCredentials.token) {
-                Object.assign(newPayload, {
-                    token: dbCredentials.token
-                });
-            }
+            
             setDatasourcePayload({
                 ...datasourcePayload,
                 ...newPayload
@@ -454,7 +452,7 @@ export function AddVaultMenu() {
                         label={t("add-vault-menu.loader.db-auth.url-label")}
                     >
                         <InputGroup
-                            placeholder="https://..."
+                            placeholder="https://localhost:7212/"
                             onChange={evt => setDbCredentials({
                                 ...dbCredentials,
                                 url: evt.target.value,

@@ -18,7 +18,7 @@ export function useSourceDetails(sourceID: VaultSourceID): [VaultSourceDescripti
                 showError(`Failed fetching vault details: ${err.message}`);
             });
     }, [sourceID]);
-    useEffect(() => {
+    useEffect(() => { 
         if (!sourceID) {
             setDetails(null);
             return;
