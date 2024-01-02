@@ -30,6 +30,7 @@ export async function addNewVaultTarget(
             reject(new Error(`Failed adding vault Check : ${error}`));
         });
     });
+
     const payload: AddVaultPayload = {
         createNew,
         datasourceConfig,
@@ -39,6 +40,7 @@ export async function addNewVaultTarget(
     logInfo(`Adding new vault: ${datasourceConfig.type}`);
     ipcRenderer.send("add-vault-config", JSON.stringify(payload));
     try {
+        console.log("inside add-vault-config ipc try");
         const sourceID = await addNewVaultPromise;
         setBusy(false);
         getVaultAdditionEmitter().emit("vault-added", sourceID);

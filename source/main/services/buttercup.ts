@@ -87,6 +87,7 @@ export async function attachVaultManagerWatchers() {
     vaultManager.on("sourcesUpdated", async () => {
         sendSourcesToWindows();
         vaultManager.unlockedSources.forEach((source) => {
+            logErr(`Vault sources to be updated ${source.id}`);
             if (!__watchedVaultSources.includes(source.id)) {
                 source.on("updated", () => onVaultSourceUpdated(source));
                 __watchedVaultSources.push(source.id);
@@ -293,9 +294,13 @@ export async function saveSource(sourceID: VaultSourceID) {
 }
 
 export async function saveVaultFacade(sourceID: VaultSourceID, facade: VaultFacade): Promise<void> {
+    logErr(`Facade check 1`);
     const vaultManager = getVaultManager();
+    logErr(`Facade check 2`);
     const source = vaultManager.getSourceForID(sourceID);
+    logErr(`Facade check 3`);
     consumeVaultFacade(source.vault, facade);
+    logErr(`Facade check 4: ${source.id}`);
     await source.save();
 }
 

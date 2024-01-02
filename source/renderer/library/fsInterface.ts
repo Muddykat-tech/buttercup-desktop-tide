@@ -3,7 +3,8 @@ import {
     FileSystemInterface,
     GoogleDriveInterface,
     WebDAVInterface,
-    DBInterface
+    DBInterface,
+    Identifier
 } from "@buttercup/file-interface";
 import { GoogleDriveClient } from "@buttercup/googledrive-client";
 import { DropboxClient } from "@buttercup/dropbox-client";
@@ -38,13 +39,21 @@ export function getFSInstance(type: SourceType, settings: FSInstanceSettings): F
             });
         }
         case SourceType.DB:
-            console.log("Source Type WIP file 'fsInterface.ts' requires a new DatabaseClient file to be created in the Core Application.");
+            console.log(
+                "Source Type WIP file 'fsInterface.ts' requires a new DatabaseClient file to be created in the Core Application."
+            );
             console.log("Setting endpoint as :", settings.endpoint);
 
             return new DBInterface({
                 dbURL: settings.endpoint as string,
                 uuid: settings.token as string,
-                buttercupServerClient: new ButtercupServerClient(settings.endpoint, settings.token)
+                buttercupServerClient: new ButtercupServerClient(
+                    {
+                        identifier: settings.endpoint as Identifier,
+                        name: settings.endpoint as string
+                    },
+                    settings.token as string
+                )
             });
         default:
             throw new Error(`Unsupported interface: ${type}`);

@@ -207,6 +207,7 @@
     "auto-launch": "^5.0.6",
     "axios": "^1.6.2",
     "buttercup": "file:../buttercup-core-heimdall/buttercup-7.3.0.tgz",
+    "buttercup-server-client": "file:../buttercup-server/buttercup-server-client/buttercup-server-client-1.0.0.tgz",
     "debounce": "^1.2.1",
     "debounce-promise": "^3.1.2",
     "delayable-setinterval": "^0.1.1",

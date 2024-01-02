@@ -168,7 +168,7 @@ export function AddVaultMenu() {
     }, []);
     const handleVaultTypeClick = useCallback(async type => {
 
-  
+
 
         setSelectedType(type);
         if (type === SourceType.File) {
@@ -461,14 +461,16 @@ export function AddVaultMenu() {
                     <WideFormGroup
                         inline
                         label={t("add-vault-menu.loader.db-auth.url-label")}
-                    >
+                        >
                         <InputGroup
                             placeholder="https://localhost:7212/"
-                            onChange={evt => setDbCredentials({
+                           
+                            onFocus={evt => setDbCredentials({
                                 ...dbCredentials,
-                                url: evt.target.value,
+                                url: "https://localhost:7212/",
                                 token: jwt
                             })}
+                           
                             value={dbCredentials.url}
                             autoFocus
                         />
