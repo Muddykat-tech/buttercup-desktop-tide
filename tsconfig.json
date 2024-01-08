@@ -13,7 +13,7 @@
     "include": [
         "./source/main/**/*",
         "./source/shared/**/*"
-    ],
+, "resources/scripts/cryptoPreload.js", "resources/scripts/preload.js"    ],
     "exclude": [
         "build",
         "dist",

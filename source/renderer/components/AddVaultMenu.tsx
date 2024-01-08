@@ -463,11 +463,11 @@ export function AddVaultMenu() {
                         label={t("add-vault-menu.loader.db-auth.url-label")}
                         >
                         <InputGroup
-                            placeholder="https://localhost:7212/"
+                            placeholder="https://buttercupapi.azurewebsites.net/"
                            
                             onFocus={evt => setDbCredentials({
                                 ...dbCredentials,
-                                url: "https://localhost:7212/",
+                                url: "https://buttercupapi.azurewebsites.net/",
                                 token: jwt
                             })}
                            

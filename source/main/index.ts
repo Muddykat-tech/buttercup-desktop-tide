@@ -15,21 +15,21 @@ let authenticationWindow: BrowserWindow | null;
 import ipc from "@achrinza/node-ipc";
 
 // IPC Heimdall Events for encryption/decryption
-ipc.config.id = 'heimdallserver';
+ipc.config.id = "heimdallserver";
 ipc.config.retry = 1500;
 ipc.config.silent = true;
 ipc.config.port = 8001;
 
 // Create an IPC server
 ipc.serve(() => {
-    ipc.server.on('start', () => {
-        console.log('Heimdall front-end server started');
+    ipc.server.on("start", () => {
+        console.log("Heimdall front-end server started");
         // Listen for messages from the main process
-        ipc.server.on('decrypt', async (data, socket) => {
+        ipc.server.on("decrypt", async (data, socket) => {
             try {
                 // Perform encryption or any necessary processing
-                console.log('Attempting to decrypt sent data', data);
-                let jsonData = { id: 'decrypt', data: data };
+                console.log("Attempting to decrypt sent data", data);
+                let jsonData = { id: "decrypt", data: data };
 
                 let response = await handleCoreDataParse(JSON.stringify(jsonData));
 
@@ -38,34 +38,33 @@ ipc.serve(() => {
                 if (socket) {
                     console.log("Sending Decrypted Data to crypto.ts");
                     console.log("Sending response: ", response);
-                    ipc.server.broadcast('decrypt-response', response);
+                    ipc.server.broadcast("decrypt-response", response);
                 } else {
-                    console.error('Socket is not available.');
+                    console.error("Socket is not available.");
                 }
             } catch (error) {
-                console.error('Error occurred during decryption:', error);
+                console.error("Error occurred during decryption:", error);
                 // Handle or log the error appropriately
             }
         });
 
-        ipc.server.on('encrypt', async (data, socket) => {
+        ipc.server.on("encrypt", async (data, socket) => {
             try {
                 // Perform encryption or any necessary processing
-                console.log('Attempting to encrypt sent data', data);
-                let jsonData = { id: 'encrypt', data: data };
+                console.log("Attempting to encrypt sent data", data);
+                let jsonData = { id: "encrypt", data: data };
                 let response = await handleCoreDataParse(JSON.stringify(jsonData));
 
                 // Ensure the response is in the expected format before emitting
                 // Emitting the 'encrypt-response' event to the specific socket
                 if (socket) {
                     console.log("Sending Encrypted Data to crypto.ts");
-                    ipc.server.broadcast('encrypt-response', response);
-                    
+                    ipc.server.broadcast("encrypt-response", response);
                 } else {
-                    console.error('Socket is not available.');
+                    console.error("Socket is not available.");
                 }
             } catch (error) {
-                console.error('Error occurred during encryption:', error);
+                console.error("Error occurred during encryption:", error);
                 // Handle or log the error appropriately
             }
         });
@@ -90,14 +89,16 @@ function openAuthenticationWindow() {
             nodeIntegration: false,
             contextIsolation: true,
             sandbox: false,
-            preload: path.join(__dirname, "../../source/main/preload.js") // use a preload script
+            preload: path.resolve(__dirname, "../../resources/scripts/preload.js") // use a preload script
         }
     });
 
     logInfo("Launching Tide Authentication");
 
     // Load content into the authentication window
-    authenticationWindow.loadFile("./source/main/authwindow.html");
+    logInfo("Path name:", path.resolve(__dirname, "../../resources/html/authwindow.html"));
+    authenticationWindow.loadFile(path.resolve(__dirname, "../../resources/html/authwindow.html"));
+    // authenticationWindow.loadFile("C:\\Users\\amals\\Tide\\TideInternship\\buttercup-desktop-tide\\source\\main\\authwindow.html");
 
     // Handle window closed event
     authenticationWindow.on("closed", (event) => {
@@ -113,7 +114,6 @@ function openAuthenticationWindow() {
     authenticationWindow.setOpacity(0);
 }
 
-
 app.on("window-all-closed", (event: Event) => {
     event.preventDefault();
 });
@@ -127,7 +127,6 @@ app.on("activate", () => {
 // **
 
 async function handleCoreDataParse(jsonData) {
-
     return new Promise((resolve, reject) => {
         try {
             let data = JSON.parse(jsonData);
@@ -170,15 +169,15 @@ interface DataItem {
 function convertToAsciiString(data: unknown): string {
     if (Array.isArray(data)) {
         const dataArray = data as DataItem[];
-        let asciiString = '';
-        dataArray.forEach(item => {
-            Object.values(item).forEach(value => {
+        let asciiString = "";
+        dataArray.forEach((item) => {
+            Object.values(item).forEach((value) => {
                 asciiString += String.fromCharCode(value);
             });
         });
         return asciiString;
     }
-    return ''; // Handle other cases where data is not in the expected format
+    return ""; // Handle other cases where data is not in the expected format
 }
 
 function convertToUint8Array(asciiString: string): Uint8Array {
@@ -191,7 +190,6 @@ function convertToUint8Array(asciiString: string): Uint8Array {
 
     return new Uint8Array(numericArray);
 }
-
 
 async function encryptWithTide(data): Promise<String> {
     return new Promise((resolve, reject) => {
@@ -209,7 +207,6 @@ async function encryptWithTide(data): Promise<String> {
     });
 }
 async function decryptWithTide(data): Promise<string> {
-    
     let cipherText = data.data;
     console.log("Data to decrypt: ", cipherText);
     let uint8Array = convertToUint8Array(cipherText);
@@ -240,12 +237,13 @@ async function openCryptoWindow(jsonData: any): Promise<string> {
             nodeIntegration: false,
             contextIsolation: true,
             sandbox: false,
-            preload: path.join(__dirname, "../../source/main/cryptoPreload.js")
+            preload: path.resolve(__dirname, "../../resources/scripts/cryptoPreload.js")
         }
     });
 
     // Load content into the crypto window
-    await cryptoWindow.loadFile("./source/main/crypto.html");
+    // await cryptoWindow.loadFile("C:\\Users\\amals\\Tide\\TideInternship\\buttercup-desktop-tide\\source\\main\\crypto.html");
+    await cryptoWindow.loadFile(path.resolve(__dirname, "../../resources/html/crypto.html"));
 
     jsonData.token = tideJWT;
 
@@ -257,11 +255,10 @@ async function openCryptoWindow(jsonData: any): Promise<string> {
         cryptoWindow.show();
     });
 
-    //cryptoWindow.setOpacity(0); 
-    return new Promise(async (resolve, reject) => { 
-        
-        console.log('Waiting for response')
-        let response = 'waiting';
+    //cryptoWindow.setOpacity(0);
+    return new Promise(async (resolve, reject) => {
+        console.log("Waiting for response");
+        let response = "waiting";
 
         ipcMain.once("toMain", async (event, jsonData) => {
             let data = JSON.parse(jsonData);
@@ -272,7 +269,7 @@ async function openCryptoWindow(jsonData: any): Promise<string> {
                     break;
                 case "decrypt":
                     response = JSON.parse(data.data);
-                    console.log("Pass Check 3")
+                    console.log("Pass Check 3");
                     break;
             }
             resolve(response);

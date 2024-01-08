@@ -1,14 +1,14 @@
 {
-  "name": "Buttercup",
-  "version": "2.23.0",
-  "description": "Buttercup Password Manager",
+  "name": "Buttercup-Tide",
+  "version": "1.0.0",
+  "description": "Buttercup Password Manager with Tide",
   "main": "build/main/index.js",
   "scripts": {
     "build": "run-s clean build:app",
     "build:app": "npm run set-version && webpack --config webpack.config.js --mode production",
     "clean": "rimraf build dist",
     "format": "prettier --write '{{resources,source,test}/**/*.{js,ts},webpack.config.js}'",
-    "package": "electron-builder --mac --win --linux -p always",
+    "package": "electron-builder --win -p always",
     "package:linux": "electron-builder --linux",
     "package:mac": "electron-builder --mac",
     "package:win": "electron-builder --win",
@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/buttercup/buttercup-desktop.git"
+    "url": "git+https://github.com/Muddykat-tech/buttercup-desktop-tide.git"
   },
   "engines": {
     "node": ">=16",
@@ -51,16 +51,15 @@
   "author": "MadDev",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/buttercup/desktop/issues"
+    "url": "https://github.com/Muddykat-tech/buttercup-desktop-tide/issues"
   },
-  "homepage": "https://github.com/buttercup/desktop#readme",
+  "homepage": "https://github.com/Muddykat-tech/buttercup-desktop-tide#readme",
   "build": {
     "afterSign": "electron-builder-notarize",
     "afterAllArtifactBuild": "./resources/scripts/fix-mac-zip.js",
     "appId": "pw.buttercup.desktop",
     "asar": true,
-    "productName": "Buttercup",
-    "copyright": "Copyright © MadDev Oy",
+    "productName": "Buttercup Tidified",
     "files": [
       "build/**/*",
       "resources/**/*",
@@ -140,8 +139,8 @@
     "publish": [
       {
         "provider": "github",
-        "owner": "buttercup",
-        "repo": "buttercup-desktop"
+        "owner": "Muddykat-tech",
+        "repo": "buttercup-desktop-tide"
       }
     ],
     "directories": {
@@ -149,22 +148,21 @@
     },
     "win": {
       "icon": "./resources/build/icon.ico",
-      "artifactName": "${productName}-${os}-${env.NODE_ARCHITECTURE}-${version}.${ext}",
+      "artifactName": "${productName}-${os}-${version}.${ext}",
       "target": [
         "nsis",
         "portable",
         "7z"
-      ],
-      "publisherName": "MadDev Oy"
+      ]
     },
     "nsis": {
-      "artifactName": "${productName}-${os}-${env.NODE_ARCHITECTURE}-${version}-installer.${ext}",
+      "artifactName": "${productName}-${os}-${version}-installer.${ext}",
       "oneClick": false,
       "perMachine": false,
       "include": "./resources/build/installer.nsh"
     },
     "portable": {
-      "artifactName": "${productName}-${os}-${env.NODE_ARCHITECTURE}-${version}-portable.${ext}"
+      "artifactName": "${productName}-${os}-${version}-portable.${ext}"
     }
   },
   "jest": {
