@@ -17,7 +17,7 @@ A Tide Vault is functionally no different than any other vault that you can crea
 The login prompt for a Tide Account also has protections against brute force attacks.
 
 <details>
-    <summary></summary>
+    <summary>Future Features</summary>
     The ability to nominate another Tide Account access to specific group folders in your own tide vault; This is possible due to Tide's technology and is a feature that our team would like to implement. 
 </details>
 
