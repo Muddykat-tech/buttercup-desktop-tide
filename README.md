@@ -21,5 +21,10 @@ The login prompt for a Tide Account also has protections against brute force att
     The ability to nominate another Tide Account access to specific group folders in your own tide vault; This is possible due to Tide's technology and is a feature that our team would like to implement. 
 </details>
 
+<details>
+    <summary>Reporting Issues</summary>
+    Check the <a href="https://github.com/Muddykat-tech/buttercup-desktop-tide/issues">Issues</a> Section in the github 
+</details>
+
 ### User Guide
 Working releases of this branch of buttercup are available in the **release** section of the repository; A tide account is required for login purposes.
