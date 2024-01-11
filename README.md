@@ -1,6 +1,8 @@
 # Buttercup Desktop - Heimdall Implementation Branch
 
-> See main Branch [Buttercup](https://github.com/buttercup/buttercup-desktop/tree/master)
+> See main branch of [Buttercup](https://github.com/buttercup/buttercup-desktop/tree/master)<br>
+> Warning Tide Network is currently under development and has periodic resets, which may result in tide **account deletion**.<br>
+> Treat this repository more of a proof of concept until futher notice.<br>
 
 ## About
 This branch changes implements a new datasource / vault type. A Tide vault, this vault uses heimdall for encryption and authentication. 
@@ -28,3 +30,33 @@ The login prompt for a Tide Account also has protections against brute force att
 
 ### User Guide
 Working releases of this branch of buttercup are available in the **release** section of the repository; A tide account is required for login purposes.
+
+#### General Application Overview 
+![Buttercup Tide Flowchart drawio](https://github.com/Muddykat-tech/buttercup-desktop-tide/assets/17131200/56c3d114-4c5e-47e6-8dd9-62eaf4fdd664)
+
+Above is a rough flowchart detailing the function calls behind an attempt to create a vault using the Tide Datasource.
+
+#### User Build Guide
+To build this application yourself, simply clone the repository, in the root file run the following commmands:
+Once cloned, make sure to install all dependencies: ```npm install```. After that, open 2 terminals and run ```npm run start:build``` on one, and then ```npm run start:main``` in the other.
+
+For more involved delopment you may need to download and edit the following libraries:
+
+[Buttercup Core](https://github.com/Muddykat-tech/buttercup-core-heimdall)
+> Handles Vault Management, Most Cryptographic Functions 
+
+[File Interface](https://github.com/Muddykat-tech/file-interface)
+> Handles Interfacing with Datasource Clients and used in the 'Renderer' Section of this repository
+
+[Buttercup Server](https://github.com/Amalsaju/buttercup-server)
+> Contains the Dotnet Server Architecture and the Server Client that is used in File Interface
+
+#### To Create an Executeable
+Run the command:
+```
+npm run release
+```
+If you encounter issues with this command check the ```package.json``` as it contains the build information, depending on the operating system you are running you may need to edit this file.
+
+**For more indepth Development information See main branch of [Buttercup](https://github.com/buttercup/buttercup-desktop/tree/master)**
+
