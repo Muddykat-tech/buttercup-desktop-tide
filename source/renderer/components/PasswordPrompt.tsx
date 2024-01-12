@@ -49,7 +49,7 @@ export function PasswordPrompt() {
     const submitPasswordPrompt = useCallback((password: string, usedBiometrics: boolean) => {
         emitter.emit("password", password, usedBiometrics);
         setShowPrompt(false);
-        setCurrentPassword("");
+        setCurrentPassword(password);
         setPromptedBiometrics(false);
     }, [emitter, setShowPrompt]);
     const handleKeyPress = useCallback(

@@ -92,7 +92,7 @@
         "%u"
       ],
       "desktop": {
-        "Name": "Buttercup Password Manager",
+        "Name": "Tide Enabled Buttercup Password Manager",
         "Type": "Application",
         "Comment": "A free and open-source password management application",
         "Terminal": "false"
