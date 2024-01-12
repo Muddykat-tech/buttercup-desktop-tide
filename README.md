@@ -28,6 +28,12 @@ The login prompt for a Tide Account also has protections against brute force att
     Check the <a href="https://github.com/Muddykat-tech/buttercup-desktop-tide/issues">Issues</a> Section in the github 
 </details>
 
+<details>
+    <summary>FAQ</summary>
+    Q: Why am I getting a warning that the enclave could not be verified at the tide login screen? <br>
+    A: This warning is in place because we don't have a true Vendor Key, this system is used to authenticate if the application is a geniune instance, as we don't have it the warning is in place to warn users to only install the app from known good sources.
+</details>
+
 ### User Guide
 Working releases of this branch of buttercup are available in the **release** section of the repository; A tide account is required for login purposes.
 
@@ -49,7 +55,10 @@ For more involved delopment you may need to download and edit the following libr
 > Handles Interfacing with Datasource Clients and used in the 'Renderer' Section of this repository
 
 [Buttercup Server](https://github.com/Amalsaju/buttercup-server)
-> Contains the Dotnet Server Architecture and the Server Client that is used in File Interface
+> Contains the Server Client that is used in File Interface
+
+[Buttercup Vault Database](https://github.com/Amalsaju/buttercup-vault-database)
+> Contains the Dotnet Server Architecture used to store vaults
 
 #### To Create an Executeable
 Run the command:
