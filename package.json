@@ -93,7 +93,7 @@
         "%u"
       ],
       "desktop": {
-        "Name": "Tidyfied Buttercup Password Manager",
+        "Name": "Tide Enabled Buttercup Password Manager",
         "Type": "Application",
         "Comment": "Buttercup with Tide authentication flow and tide vault implemented",
         "Terminal": "false"

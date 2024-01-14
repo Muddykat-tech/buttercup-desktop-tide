@@ -349,8 +349,7 @@ export function AddVaultMenu() {
         } else if (selectedType === SourceType.DB) {
             setDatasourcePayload({
                 ...datasourcePayload,
-                path: selectedRemotePath,
-                // token: dbCredentials.token
+                path: selectedRemotePath
             });
             setCurrentPage(PAGE_CONFIRM);
         }
@@ -363,10 +362,14 @@ export function AddVaultMenu() {
                 ? await createEmptyGoogleDriveVault(datasource.token, parentIdentifier, identifier, vaultPassword)
                 : identifier;
         }
-
-        addNewVaultTarget(datasource, '123', createNew, vaultFilenameOverride);
+        if (selectedType === SourceType.DB) {
+            // Just to prevent any errors if a 'password' is required.
+            addNewVaultTarget(datasource, '123', createNew, vaultFilenameOverride);
+        } else {
+            addNewVaultTarget(datasource, vaultPassword, createNew, vaultFilenameOverride);
+        }
         close(); // This also clears sensitive state items
-    }, [datasourcePayload, '123', selectedType, selectedRemotePath, createNew]);
+    }, [datasourcePayload, vaultPassword, selectedType, selectedRemotePath, createNew]);
     // Pages
     const pageType = () => (
         <>
@@ -493,14 +496,16 @@ export function AddVaultMenu() {
             {!createNew && (
                 <p>{t("add-vault-menu.confirm.existing-vault")}</p>
             )}
-            {/* <InputGroup
+            {selectedType !== SourceType.DB && (
+                <InputGroup
                 id="password"
                 placeholder={t("add-vault-menu.confirm.password-placeholder")}
                 type="password"
                 value={vaultPassword}
                 onChange={evt => setVaultPassword(evt.target.value)}
                 autoFocus
-            /> */}
+                />) 
+            }
         </>
     );
     // Output
@@ -557,7 +562,7 @@ export function AddVaultMenu() {
                     )}
                     {currentPage === PAGE_CONFIRM && (
                         <Button
-                            //disabled={vaultPassword.length === 0}
+                            disabled={vaultPassword.length === 0 && selectedType !== SourceType.DB}
                             intent={Intent.PRIMARY}
                             onClick={handleFinalConfirm}
                             title={t("add-vault-menu.page-confirm-finish-title")}

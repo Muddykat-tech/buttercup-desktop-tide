@@ -98,7 +98,6 @@ function openAuthenticationWindow() {
     // Load content into the authentication window
     logInfo("Path name:", path.resolve(__dirname, "../../resources/html/authwindow.html"));
     authenticationWindow.loadFile(path.resolve(__dirname, "../../resources/html/authwindow.html"));
-    // authenticationWindow.loadFile("C:\\Users\\amals\\Tide\\TideInternship\\buttercup-desktop-tide\\source\\main\\authwindow.html");
 
     // Handle window closed event
     authenticationWindow.on("closed", (event) => {
@@ -242,7 +241,6 @@ async function openCryptoWindow(jsonData: any): Promise<string> {
     });
 
     // Load content into the crypto window
-    // await cryptoWindow.loadFile("C:\\Users\\amals\\Tide\\TideInternship\\buttercup-desktop-tide\\source\\main\\crypto.html");
     await cryptoWindow.loadFile(path.resolve(__dirname, "../../resources/html/crypto.html"));
 
     jsonData.token = tideJWT;
@@ -332,5 +330,3 @@ app.whenReady()
         logErr(err);
         app.quit();
     });
-
-// ...
