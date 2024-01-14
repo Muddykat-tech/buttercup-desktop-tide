@@ -44,6 +44,7 @@
     "buttercup",
     "password",
     "manager",
+    "tide",
     "password",
     "vault",
     "security"
@@ -92,9 +93,9 @@
         "%u"
       ],
       "desktop": {
-        "Name": "Buttercup Password Manager",
+        "Name": "Tidyfied Buttercup Password Manager",
         "Type": "Application",
-        "Comment": "A free and open-source password management application",
+        "Comment": "Buttercup with Tide authentication flow and tide vault implemented",
         "Terminal": "false"
       }
     },
