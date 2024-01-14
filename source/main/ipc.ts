@@ -72,7 +72,8 @@ import {
     SearchResult,
     VaultSettingsLocal
 } from "./types";
-import { validateAndUpdate, tideJWT } from "./services/tokenValidation";
+import { validateAndUpdate, tideJWT, validateToken } from "./services/tokenValidation";
+import { openAuthenticationWindow } from ".";
 
 // **
 // ** IPC Events
@@ -82,6 +83,12 @@ ipcMain.on("request-jwt", (event) => {
     const jwt = tideJWT;
 
     event.reply("request-jwt:response", jwt);
+});
+
+ipcMain.on("check-valid-jwt", (event) => {
+    const jwt = tideJWT;
+
+    event.reply("check-valid-jwt:response", validateToken(jwt));
 });
 
 ipcMain.on("get-source-type", async (evt, sourceID: VaultSourceID) => {
@@ -416,4 +423,9 @@ ipcMain.handle("unlock-source", async (evt, sourceID: VaultSourceID, password: s
 
 ipcMain.handle("write-clipboard", (_, text: string) => {
     clipboard.writeText(text);
+});
+
+// Listen for the IPC message to open the authentication window
+ipcMain.handle("open-authentication-window", async (event) => {
+    await openAuthenticationWindow(event);
 });

@@ -30,6 +30,9 @@ import { logErr, logInfo } from "../library/log";
 import { attachSourceEncryptedListeners } from "./backup";
 import { extractVaultOTPItems } from "../library/otp";
 import { OTP, SourceType, VaultSourceDescription } from "../types";
+import { validateToken, tideJWT } from "../services/tokenValidation";
+import { ipcMain } from "electron";
+import { openAuthenticationWindow } from "..";
 
 const __watchedVaultSources: Array<VaultSourceID> = [];
 let __vaultManager: VaultManager;
@@ -352,6 +355,20 @@ export async function toggleAutoUpdate(autoUpdateEnabled: boolean = true) {
 
 export async function unlockSource(sourceID: VaultSourceID, password: string | Object) {
     logInfo("Inside unlock source!");
+    // TODO this validates jwt? May not be needed?
+    // until I can test with the non test encryption functions
+    // I don't know if this is needed.
+    // this is here to check if the tide session for the source is still valid?
+    // CHECK HERE
+    if (typeof password !== "string") {
+        const isValid = await validateToken(tideJWT);
+        logInfo("Is Valid: ", isValid);
+        if (!isValid) {
+            logInfo("Bad Token");
+            await openAuthenticationWindow(null);
+        }
+    }
+
     const vaultManager = getVaultManager();
     const source = vaultManager.getSourceForID(sourceID);
     await source.unlock(Credentials.fromPassword(password));

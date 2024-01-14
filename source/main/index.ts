@@ -8,10 +8,9 @@ import { shouldShowMainWindow } from "./services/arguments";
 import { logErr, logInfo } from "./library/log";
 import { BUTTERCUP_PROTOCOL, PLATFORM_MACOS } from "./symbols";
 import { getStartInBackground } from "./services/config";
-import { tideJWT } from "./services/tokenValidation";
+import { tideJWT, validateAndUpdate } from "./services/tokenValidation";
 import path from "path";
 
-let authenticationWindow: BrowserWindow | null;
 import ipc from "@achrinza/node-ipc";
 
 // IPC Heimdall Events for encryption/decryption
@@ -78,39 +77,6 @@ logInfo("Application starting");
 const lock = app.requestSingleInstanceLock();
 if (!lock) {
     app.quit();
-}
-
-// Create a function to handle the authentication window
-function openAuthenticationWindow() {
-    authenticationWindow = new BrowserWindow({
-        width: 800,
-        height: 600,
-        webPreferences: {
-            nodeIntegration: false,
-            contextIsolation: true,
-            sandbox: false,
-            preload: path.resolve(__dirname, "../../resources/scripts/preload.js") // use a preload script
-        }
-    });
-
-    logInfo("Launching Tide Authentication");
-
-    // Load content into the authentication window
-    logInfo("Path name:", path.resolve(__dirname, "../../resources/html/authwindow.html"));
-    authenticationWindow.loadFile(path.resolve(__dirname, "../../resources/html/authwindow.html"));
-
-    // Handle window closed event
-    authenticationWindow.on("closed", (event) => {
-        // Proceed with the main window after the authentication window is closed
-        openMainWindow();
-    });
-
-    // Handle window ready-to-show event
-    authenticationWindow.once("ready-to-show", (event) => {
-        // Show the window once it's ready
-        authenticationWindow.show();
-    });
-    authenticationWindow.setOpacity(0);
 }
 
 app.on("window-all-closed", (event: Event) => {
@@ -275,6 +241,45 @@ async function openCryptoWindow(jsonData: any): Promise<string> {
     });
 }
 
+let authenticationWindow: BrowserWindow | null;
+export function openAuthenticationWindow(event: Electron.IpcMainInvokeEvent): Promise<void> {
+    return new Promise<void>((resolve) => {
+        authenticationWindow = new BrowserWindow({
+            width: 800,
+            height: 600,
+            webPreferences: {
+                nodeIntegration: false,
+                contextIsolation: true,
+                sandbox: false,
+                preload: path.resolve(__dirname, "../../resources/scripts/preload.js") // use a preload script
+            }
+        });
+
+        logInfo("Launching Tide Authentication");
+
+        // Load content into the authentication window
+        logInfo("Path name:", path.resolve(__dirname, "../../resources/html/authwindow.html"));
+
+        authenticationWindow.loadFile(
+            path.resolve(__dirname, "../../resources/html/authwindow.html")
+        );
+
+        authenticationWindow.once("ready-to-show", () => {
+            authenticationWindow.show();
+        });
+
+        authenticationWindow.once("closed", () => {
+            // Resolve the promise when the window is closed
+            resolve();
+        });
+
+        authenticationWindow.setOpacity(0);
+
+        // Send a message to the renderer process to notify that the window is open
+        if (event !== null) event.sender.send("authentication-window-opened");
+    });
+}
+
 // **
 // ** App protocol handling
 // **
@@ -323,8 +328,9 @@ app.whenReady()
             return;
         }
 
+        validateAndUpdate("");
         // Create and show the authentication window
-        openAuthenticationWindow();
+        openMainWindow();
     })
     .catch((err) => {
         logErr(err);

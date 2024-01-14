@@ -134,3 +134,7 @@ ipcRenderer.on("vaults-list", (evt, payload) => {
         VAULTS_STATE.currentVault = null;
     }
 });
+
+ipcRenderer.on("reauthenticate-tide", (evt, payload) => {
+    logInfo("Need to reauth tide: ", payload);
+});

@@ -21,16 +21,15 @@ import { DatasourceConfig, SourceType } from "../types";
 import { testOnlineDB } from '../actions/onlineDatabase';
 import { logInfo } from "../library/log";
 import { ipcRenderer } from "electron";
-import { isUndefined } from "util";
-
+ 
 interface WebDAVCredentialsState {
     url: string;
     username: string;
     password: string;
-}
+} 
 
 interface DBCredentialsState {
-    url: string;
+    url: string; 
     token: string;
 }
 
@@ -142,9 +141,6 @@ export function AddVaultMenu() {
     const [vaultFilenameOverride, setVaultFilenameOverride] = useState(null);
     const [dbCredentials, setDbCredentials] = useState<DBCredentialsState>({ ...EMPTY_DB_CREDENTIALS });
 
-
-
-
     useEffect(() => {
         const newValue = showAddVault.get();
         if (previousShowAddVault !== newValue) {
@@ -220,23 +216,26 @@ export function AddVaultMenu() {
             setCurrentPage(PAGE_AUTH);
         } else if (type === SourceType.DB) {
             setBusy(true);
+            await ipcRenderer.invoke('open-authentication-window');
+
+            // Wait for the jwt-update event and get the new token
 
             ipcRenderer.send("request-jwt");
-
-
             jwt = await new Promise<string>((resolve) => {
                 ipcRenderer.once("request-jwt:response", (event, jwt) => {
                     resolve(jwt);
                 });
             });
+            
+            ipcRenderer.send("notify-success", "Tide JWT Valid");
 
-            console.log("GOT TOKEN: ", jwt);
+            console.log("GOT TOKEN: ", jwt); 
             setBusy(false);
 
             setDatasourcePayload({
                 ...datasourcePayload,
                 type,
-                token: jwt
+                token: jwt 
             });
 
             setCurrentPage(PAGE_AUTH);

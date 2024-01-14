@@ -24,6 +24,7 @@ export async function unlockVaultSource(sourceID: VaultSourceID): Promise<boolea
             : await getPrimaryPassword(sourceID);
 
     if (!password && sourceType !== "db") return false;
+
     setBusy(true);
     logInfo(`Unlocking source: ${sourceID}`);
     try {
