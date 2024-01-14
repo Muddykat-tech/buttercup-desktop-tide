@@ -8,7 +8,7 @@ import {
 export interface AddVaultPayload {
     createNew: boolean;
     datasourceConfig: DatasourceConfig;
-    masterPassword: string;
+    masterPassword: string | Object;
     fileNameOverride?: string;
 }
 

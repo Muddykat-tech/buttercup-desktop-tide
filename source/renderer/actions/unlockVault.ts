@@ -8,9 +8,22 @@ import { getVaultSettings, saveVaultSettings } from "../services/vaultSettings";
 import { t } from "../../shared/i18n/trans";
 
 export async function unlockVaultSource(sourceID: VaultSourceID): Promise<boolean> {
-    const [password, biometricsEnabled, usedBiometrics] = await getPrimaryPassword(sourceID);
-    //password = '123';
-    if (!password) return false;
+    ipcRenderer.send("get-source-type", sourceID);
+    let sourceType = await new Promise<string>((resolve) => {
+        ipcRenderer.once("get-source-type:reply", (event, type) => {
+            resolve(type);
+        });
+    });
+
+    console.log("Unlocking Source Type: " + sourceType);
+    // The set password of "123" has no impact and is only used to pass checks buttercup makes by default.
+    // The actual encryption and decryption in that case is done by Tide
+    const [password, biometricsEnabled, usedBiometrics] =
+        sourceType === "db"
+            ? [{ sourceType: "db" }, false, false]
+            : await getPrimaryPassword(sourceID);
+
+    if (!password && sourceType !== "db") return false;
     setBusy(true);
     logInfo(`Unlocking source: ${sourceID}`);
     try {

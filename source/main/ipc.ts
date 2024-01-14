@@ -1,4 +1,11 @@
-import { EntryID, VaultFacade, VaultFormatID, VaultSourceID, VaultSourceStatus } from "buttercup";
+import {
+    EntryID,
+    VaultFacade,
+    VaultFormatID,
+    VaultSource,
+    VaultSourceID,
+    VaultSourceStatus
+} from "buttercup";
 import { BrowserWindow, clipboard, ipcMain, shell } from "electron";
 import { Layerr } from "layerr";
 import {
@@ -19,6 +26,7 @@ import {
     getSourceAttachmentsSupport,
     getSourceDescription,
     getSourceStatus,
+    getVaultType,
     saveSource,
     saveVaultFacade,
     sendSourcesToWindows,
@@ -74,6 +82,15 @@ ipcMain.on("request-jwt", (event) => {
     const jwt = tideJWT;
 
     event.reply("request-jwt:response", jwt);
+});
+
+ipcMain.on("get-source-type", async (evt, sourceID: VaultSourceID) => {
+    try {
+        const type = getVaultType(sourceID);
+        evt.reply("get-source-type:reply", type);
+    } catch (err) {
+        logErr("Failed to get Vault Source Type", err.message);
+    }
 });
 
 ipcMain.on("heimdall-response", async (event, data) => {
@@ -387,7 +404,7 @@ ipcMain.handle("trigger-user-presence", async () => {
     }
 });
 
-ipcMain.handle("unlock-source", async (evt, sourceID: VaultSourceID, password: string) => {
+ipcMain.handle("unlock-source", async (evt, sourceID: VaultSourceID, password: string | object) => {
     try {
         await unlockSourceWithID(sourceID, password);
         setLastSourceID(sourceID);

@@ -364,8 +364,8 @@ export function AddVaultMenu() {
         }
         if (selectedType === SourceType.DB) {
             // Just to prevent any errors if a 'password' is required.
-            addNewVaultTarget(datasource, '123', createNew, vaultFilenameOverride);
-        } else {
+            addNewVaultTarget(datasource, { sourceType: "db" }, createNew, vaultFilenameOverride);
+        } else { 
             addNewVaultTarget(datasource, vaultPassword, createNew, vaultFilenameOverride);
         }
         close(); // This also clears sensitive state items

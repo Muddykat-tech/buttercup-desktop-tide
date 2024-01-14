@@ -3,7 +3,7 @@ import createPerfTimer from "execution-time";
 import { unlockSource } from "../services/buttercup";
 import { logInfo } from "../library/log";
 
-export async function unlockSourceWithID(sourceID: VaultSourceID, password: string) {
+export async function unlockSourceWithID(sourceID: VaultSourceID, password: string | Object) {
     const timer = createPerfTimer();
     timer.start();
     await unlockSource(sourceID, password);

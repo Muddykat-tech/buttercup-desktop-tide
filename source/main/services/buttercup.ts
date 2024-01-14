@@ -231,6 +231,12 @@ export function getVaultFormat(sourceID: VaultSourceID): VaultFormatID {
     return source.vault.format.getFormat().getFormatID();
 }
 
+export function getVaultType(sourceID: VaultSourceID): string {
+    const mgr = getVaultManager();
+    const source = mgr.getSourceForID(sourceID);
+    return source.type;
+}
+
 function getVaultManager(): VaultManager {
     if (!__vaultManager) {
         init();
@@ -344,7 +350,7 @@ export async function toggleAutoUpdate(autoUpdateEnabled: boolean = true) {
     vaultManager.toggleAutoUpdating(autoUpdateEnabled);
 }
 
-export async function unlockSource(sourceID: VaultSourceID, password: string) {
+export async function unlockSource(sourceID: VaultSourceID, password: string | Object) {
     logInfo("Inside unlock source!");
     const vaultManager = getVaultManager();
     const source = vaultManager.getSourceForID(sourceID);

@@ -11,7 +11,7 @@ type NewVaultChoice = "new" | "existing" | null;
 
 export async function addNewVaultTarget(
     datasourceConfig: DatasourceConfig,
-    password: string,
+    password: string | Object,
     createNew: boolean,
     fileNameOverride: string = null
 ): Promise<VaultSourceID> {
@@ -37,6 +37,7 @@ export async function addNewVaultTarget(
         masterPassword: password,
         fileNameOverride
     };
+
     logInfo(`Adding new vault: ${datasourceConfig.type}`);
     ipcRenderer.send("add-vault-config", JSON.stringify(payload));
     try {
