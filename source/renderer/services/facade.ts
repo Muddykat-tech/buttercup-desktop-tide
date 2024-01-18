@@ -1,4 +1,4 @@
-import { VaultFacade } from "buttercup";
+import { VaultFacade } from "buttercup-heimdall";
 import EventEmitter from "eventemitter3";
 
 let __currentFacade: VaultFacade | null = null,

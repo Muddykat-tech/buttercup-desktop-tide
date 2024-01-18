@@ -1,5 +1,5 @@
 import { Menu, Tray } from "electron";
-import { VaultSourceStatus } from "buttercup";
+import { VaultSourceStatus } from "buttercup-heimdall";
 import { getSourceDescriptions, lockAllSources } from "../services/buttercup";
 import { openAndRepositionMainWindow, openMainWindow } from "../services/windows";
 import { getIconPath } from "../library/tray";

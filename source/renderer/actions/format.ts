@@ -1,5 +1,5 @@
 import { ipcRenderer } from "electron";
-import { VaultFormatID, VaultSourceID } from "buttercup";
+import { VaultFormatID, VaultSourceID } from "buttercup-heimdall";
 import { setBusy } from "../state/app";
 import { showError, showWarning } from "../services/notifications";
 import { t } from "../../shared/i18n/trans";

@@ -4,7 +4,7 @@ import { useState as useHookState } from "@hookstate/core";
 import { useSingleState } from "react-obstate";
 import { Intent, NonIdealState, Tag } from "@blueprintjs/core";
 import { VaultProvider, VaultUI, themes } from "@buttercup/ui";
-import { VaultFacade, VaultSourceStatus } from "buttercup";
+import { VaultFacade, VaultSourceStatus } from "buttercup-heimdall";
 import styled, { ThemeProvider } from "styled-components";
 import { SearchContext } from "./search/SearchContext";
 import { VAULTS_STATE } from "../state/vaults";

@@ -16,7 +16,7 @@ import {
     Switch,
     Text
 } from "@blueprintjs/core";
-import { VaultFormatID, VaultSourceStatus } from "buttercup";
+import { VaultFormatID, VaultSourceStatus } from "buttercup-heimdall";
 import { ConfirmDialog } from "./prompt/ConfirmDialog";
 import { t } from "../../shared/i18n/trans";
 import { SHOW_VAULT_SETTINGS } from "../state/vaultSettings";

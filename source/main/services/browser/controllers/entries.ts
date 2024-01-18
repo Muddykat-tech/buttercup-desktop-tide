@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { SearchResult } from "buttercup";
+import { SearchResult } from "buttercup-heimdall";
 import { EntriesSearchPayloadSchema, EntriesSearchType } from "../models";
 import { searchAllVaultsByTerm, searchAllVaultsByURL } from "../../search";
 import { respondJSON } from "../response";

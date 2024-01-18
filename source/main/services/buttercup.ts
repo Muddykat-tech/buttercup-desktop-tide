@@ -18,7 +18,7 @@ import {
     VaultSourceID,
     VaultSourceStatus,
     init
-} from "buttercup";
+} from "buttercup-heimdall";
 import { exportVaultToCSV } from "@buttercup/exporter";
 import { describeSource } from "../library/sources";
 import { clearFacadeCache } from "./facades";

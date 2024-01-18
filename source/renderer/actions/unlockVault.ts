@@ -1,5 +1,5 @@
 import { ipcRenderer } from "electron";
-import { VaultSourceID } from "buttercup";
+import { VaultSourceID } from "buttercup-heimdall";
 import { getPrimaryPassword } from "./password";
 import { setBusy } from "../state/app";
 import { showError } from "../services/notifications";

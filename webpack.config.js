@@ -4,7 +4,7 @@ const HTMLWebpackPlugin = require("html-webpack-plugin");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 const BCUPUI_ICONS_PATH = path.join(path.dirname(require.resolve("@buttercup/ui")), "icons");
-const BCUP_PACKAGE_PATH = path.join(__dirname, "node_modules/buttercup/package.json");
+const BCUP_PACKAGE_PATH = path.join(__dirname, "node_modules/buttercup-heimdall/package.json");
 
 const pkgInfo = require("./package.json");
 const bcupCoreInfo = require(BCUP_PACKAGE_PATH);
@@ -141,7 +141,7 @@ module.exports = [
 
         resolve: {
             alias: {
-                buttercup: require.resolve("buttercup/web"),
+                buttercup: require.resolve("buttercup-heimdall/web"),
                 "react-dnd": path.resolve("node_modules/react-dnd"),
                 "react/jsx-runtime": "react/jsx-runtime.js"
             },

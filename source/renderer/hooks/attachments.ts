@@ -1,4 +1,4 @@
-import { VaultSourceID } from "buttercup";
+import { VaultSourceID } from "buttercup-heimdall";
 import { useCallback, useEffect, useState } from "react";
 import { useState as useHookState } from "@hookstate/core";
 import { Layerr } from "layerr";

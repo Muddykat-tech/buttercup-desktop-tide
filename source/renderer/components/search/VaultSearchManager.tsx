@@ -1,5 +1,5 @@
 import React, { useCallback, useContext } from "react";
-import { VaultSourceID, getEntryFacadePath } from "buttercup";
+import { VaultSourceID, getEntryFacadePath } from "buttercup-heimdall";
 import { useState as useHookState } from "@hookstate/core";
 import { SearchModal } from "./SearchModal";
 import { SearchContext } from "./SearchContext";

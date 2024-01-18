@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { VaultFacade, VaultSourceStatus } from "buttercup";
+import { VaultFacade, VaultSourceStatus } from "buttercup-heimdall";
 import { Layerr } from "layerr";
 import {
     getSourceDescriptions,

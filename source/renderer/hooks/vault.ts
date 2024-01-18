@@ -1,4 +1,4 @@
-import { VaultSourceID } from "buttercup";
+import { VaultSourceID } from "buttercup-heimdall";
 import { useCallback, useEffect, useState } from "react";
 import { ipcRenderer } from "electron";
 import { logErr } from "../library/log";
@@ -18,7 +18,7 @@ export function useSourceDetails(sourceID: VaultSourceID): [VaultSourceDescripti
                 showError(`Failed fetching vault details: ${err.message}`);
             });
     }, [sourceID]);
-    useEffect(() => { 
+    useEffect(() => {
         if (!sourceID) {
             setDetails(null);
             return;

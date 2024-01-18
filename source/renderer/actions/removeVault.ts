@@ -1,5 +1,5 @@
 import { ipcRenderer } from "electron";
-import { VaultSourceID } from "buttercup";
+import { VaultSourceID } from "buttercup-heimdall";
 import { VAULTS_STATE } from "../state/vaults";
 
 export async function removeVaultSource(sourceID: VaultSourceID) {

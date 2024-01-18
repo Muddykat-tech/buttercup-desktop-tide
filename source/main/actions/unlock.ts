@@ -1,4 +1,4 @@
-import { VaultSourceID } from "buttercup";
+import { VaultSourceID } from "buttercup-heimdall";
 import createPerfTimer from "execution-time";
 import { unlockSource } from "../services/buttercup";
 import { logInfo } from "../library/log";

@@ -1,5 +1,5 @@
 import { ipcRenderer } from "electron";
-import { VaultSourceID } from "buttercup";
+import { VaultSourceID } from "buttercup-heimdall";
 import { setBusy } from "../state/app";
 import { logInfo } from "../library/log";
 import { getCreateNewFilePromptEmitter, getVaultAdditionEmitter } from "../services/addVault";

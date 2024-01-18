@@ -1,4 +1,4 @@
-import { EntryType } from "buttercup";
+import { EntryType } from "buttercup-heimdall";
 import { z } from "zod";
 
 const PUBLIC_KEY = z.string();

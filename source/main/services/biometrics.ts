@@ -1,5 +1,5 @@
 import { systemPreferences } from "electron";
-import { VaultSourceID } from "buttercup";
+import { VaultSourceID } from "buttercup-heimdall";
 import { Layerr } from "layerr";
 import keytar from "keytar";
 import { getSourceDescription, testSourceMasterPassword } from "./buttercup";

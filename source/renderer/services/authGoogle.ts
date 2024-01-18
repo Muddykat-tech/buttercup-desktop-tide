@@ -1,7 +1,7 @@
 import { ipcRenderer } from "electron";
 import { shell } from "@electron/remote";
 import { OAuth2Client } from "@buttercup/google-oauth2-client";
-import type { VaultSourceID } from "buttercup";
+import type { VaultSourceID } from "buttercup-heimdall";
 import { logInfo } from "../library/log";
 import {
     GOOGLE_AUTH_REDIRECT,

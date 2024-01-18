@@ -1,4 +1,4 @@
-import { VaultSource, VaultSourceStatus, init } from "buttercup";
+import { VaultSource, VaultSourceStatus, init } from "buttercup-heimdall";
 import { describeSource } from "./sources";
 
 function getFakeSource() {

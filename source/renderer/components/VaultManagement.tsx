@@ -3,7 +3,7 @@ import { useHistory, useParams } from "react-router-dom";
 import cn from "classnames";
 import styled from "styled-components";
 import { Intent } from "@blueprintjs/core";
-import { VaultSourceID, VaultSourceStatus } from "buttercup";
+import { VaultSourceID, VaultSourceStatus } from "buttercup-heimdall";
 import { useSingleState } from "react-obstate";
 import { VaultEditor } from "./VaultEditor";
 import { VaultSearchManager } from "./search/VaultSearchManager";

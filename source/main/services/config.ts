@@ -1,6 +1,6 @@
 import AutoLaunch from "auto-launch";
 import fs from "fs/promises";
-import { VaultSourceID } from "buttercup";
+import { VaultSourceID } from "buttercup-heimdall";
 import { getConfigStorage, getVaultSettingsPath, getVaultSettingsStorage } from "./storage";
 import { naiveClone } from "../../shared/library/clone";
 import { logErr, logInfo } from "../library/log";

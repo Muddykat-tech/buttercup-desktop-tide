@@ -1,6 +1,6 @@
 import fs from "fs";
 import { dialog } from "electron";
-import { VaultSourceID } from "buttercup";
+import { VaultSourceID } from "buttercup-heimdall";
 import pify from "pify";
 import { exportVault, getSourceDescription } from "./buttercup";
 import { getMainWindow } from "./windows";

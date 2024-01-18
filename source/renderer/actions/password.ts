@@ -1,4 +1,4 @@
-import { VaultSourceID } from "buttercup";
+import { VaultSourceID } from "buttercup-heimdall";
 
 import { getPasswordEmitter } from "../services/password";
 import { sourceHasBiometricAvailability } from "../services/biometrics";

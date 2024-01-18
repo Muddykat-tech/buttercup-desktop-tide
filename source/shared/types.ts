@@ -3,7 +3,7 @@ import {
     VaultFormatID,
     VaultSourceID,
     VaultSourceStatus
-} from "buttercup";
+} from "buttercup-heimdall";
 
 export interface AddVaultPayload {
     createNew: boolean;

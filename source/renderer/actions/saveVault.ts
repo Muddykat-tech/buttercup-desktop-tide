@@ -1,6 +1,6 @@
 import { ipcRenderer } from "electron";
 import { Intent } from "@blueprintjs/core";
-import { VaultFacade, VaultSourceID } from "buttercup";
+import { VaultFacade, VaultSourceID } from "buttercup-heimdall";
 import { Layerr } from "layerr";
 import { setSaving } from "../state/app";
 import { createProgressNotification } from "../services/notifications";

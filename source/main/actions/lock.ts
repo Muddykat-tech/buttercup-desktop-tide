@@ -1,4 +1,4 @@
-import { VaultSourceID } from "buttercup";
+import { VaultSourceID } from "buttercup-heimdall";
 import { lockSource } from "../services/buttercup";
 import { logInfo } from "../library/log";
 

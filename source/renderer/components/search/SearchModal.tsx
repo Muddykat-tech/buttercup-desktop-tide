@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { IInputGroupProps2, Intent, MenuItem, Tag } from "@blueprintjs/core";
 import { Omnibar } from "@blueprintjs/select";
 import { SiteIcon } from "@buttercup/ui";
-import { EntryType } from "buttercup";
+import { EntryType } from "buttercup-heimdall";
 import styled from "styled-components";
 import { extractSSHPubKeyName } from "../../library/entryType";
 import { trimWithEllipses } from "../../library/trim";

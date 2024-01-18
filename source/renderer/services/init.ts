@@ -1,5 +1,5 @@
 import { ipcRenderer } from "electron";
-import { init } from "buttercup";
+import { init } from "buttercup-heimdall";
 import { logInfo } from "../library/log";
 import { attachUpdatedListener, getThemeType, updateBodyTheme } from "../library/theme";
 import {

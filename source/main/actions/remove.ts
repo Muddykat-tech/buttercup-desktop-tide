@@ -1,4 +1,4 @@
-import { VaultSourceID } from "buttercup";
+import { VaultSourceID } from "buttercup-heimdall";
 import { lockSource, removeSource } from "../services/buttercup";
 import { logInfo } from "../library/log";
 import { removeVaultSettings } from "../services/config";

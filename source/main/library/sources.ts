@@ -1,4 +1,4 @@
-import { VaultSource, VaultSourceStatus } from "buttercup";
+import { VaultSource, VaultSourceStatus } from "buttercup-heimdall";
 import { SourceType, VaultSourceDescription } from "../types";
 
 export function describeSource(source: VaultSource): VaultSourceDescription {

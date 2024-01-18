@@ -1,6 +1,6 @@
 import { ipcRenderer } from "electron";
 import debounce from "debounce";
-import { VaultSourceID } from "buttercup";
+import { VaultSourceID } from "buttercup-heimdall";
 import { setSearchResults } from "../state/search";
 import { SearchResult } from "../types";
 

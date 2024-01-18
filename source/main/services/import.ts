@@ -1,6 +1,6 @@
 import path from "path";
 import { dialog } from "electron";
-import { Vault, VaultSourceID } from "buttercup";
+import { Vault, VaultSourceID } from "buttercup-heimdall";
 import {
     BitwardenImporter,
     ButtercupCSVImporter,

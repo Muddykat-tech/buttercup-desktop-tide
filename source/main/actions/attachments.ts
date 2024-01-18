@@ -1,5 +1,5 @@
 import fs from "fs";
-import { EntryID, VaultSourceID } from "buttercup";
+import { EntryID, VaultSourceID } from "buttercup-heimdall";
 import { dialog } from "electron";
 import pify from "pify";
 import { getAttachmentData, getAttachmentDetails } from "../services/buttercup";

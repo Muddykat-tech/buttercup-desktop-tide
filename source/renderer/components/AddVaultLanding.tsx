@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from "react";
 import { useHistory } from "react-router-dom";
-import { VaultSourceID } from "buttercup";
+import { VaultSourceID } from "buttercup-heimdall";
 import styled from "styled-components";
 import { Button, NonIdealState, Tag } from "@blueprintjs/core";
 import { showAddVaultMenu } from "../state/addVault";

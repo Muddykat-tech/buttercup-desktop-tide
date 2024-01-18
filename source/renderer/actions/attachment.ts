@@ -1,5 +1,5 @@
 import { ipcRenderer } from "electron";
-import { EntryID, VaultSourceID } from "buttercup";
+import { EntryID, VaultSourceID } from "buttercup-heimdall";
 import { fetchUpdatedFacade } from "./facade";
 
 export async function addAttachments(

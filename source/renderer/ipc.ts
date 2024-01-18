@@ -1,6 +1,6 @@
 import { ipcRenderer } from "electron";
 import { UpdateInfo } from "electron-updater";
-import { VaultSourceID } from "buttercup";
+import { VaultSourceID } from "buttercup-heimdall";
 import { VAULTS_STATE } from "./state/vaults";
 import { showAddVaultMenu } from "./state/addVault";
 import { showPreferences } from "./state/preferences";

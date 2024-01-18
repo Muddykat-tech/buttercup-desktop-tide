@@ -1,4 +1,4 @@
-import { VaultFormatID, VaultSourceID } from "buttercup";
+import { VaultFormatID, VaultSourceID } from "buttercup-heimdall";
 import { logInfo } from "../library/log";
 import { convertVaultFormatAToB, getVaultFormat } from "./buttercup";
 

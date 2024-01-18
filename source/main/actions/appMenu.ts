@@ -1,5 +1,5 @@
 import { Menu } from "electron";
-import { VaultSourceStatus } from "buttercup";
+import { VaultSourceStatus } from "buttercup-heimdall";
 import { getSourceDescriptions, lockAllSources, lockSource } from "../services/buttercup";
 import { closeWindows, getMainWindow, openMainWindow } from "../services/windows";
 import { getConfigValue, setConfigValue } from "../services/config";

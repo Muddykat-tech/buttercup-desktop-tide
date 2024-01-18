@@ -1,5 +1,5 @@
 import { ipcRenderer } from "electron";
-import { VaultSourceID } from "buttercup";
+import { VaultSourceID } from "buttercup-heimdall";
 
 export async function getSelectedSource(): Promise<string> {
     const sourceID = await ipcRenderer.invoke("get-selected-source");

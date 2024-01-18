@@ -1,6 +1,6 @@
 
 import React, { useMemo } from "react";
-import { VaultSourceID, VaultSourceStatus } from "buttercup";
+import { VaultSourceID, VaultSourceStatus } from "buttercup-heimdall";
 import { useSingleState } from "react-obstate";
 import { Tabs } from "@buttercup/ui";
 import { Intent, Menu, MenuDivider, MenuItem } from "@blueprintjs/core";

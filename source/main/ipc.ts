@@ -5,7 +5,7 @@ import {
     VaultSource,
     VaultSourceID,
     VaultSourceStatus
-} from "buttercup";
+} from "buttercup-heimdall";
 import { BrowserWindow, clipboard, ipcMain, shell } from "electron";
 import { Layerr } from "layerr";
 import {

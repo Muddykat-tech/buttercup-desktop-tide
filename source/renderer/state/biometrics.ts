@@ -1,5 +1,5 @@
 import { State, createState } from "@hookstate/core";
-import { VaultSourceID } from "buttercup";
+import { VaultSourceID } from "buttercup-heimdall";
 
 export const SHOW_REGISTER_PROMPT: State<boolean> = createState(false as boolean);
 export const VAULTS_WITH_BIOMETRICS: State<Array<VaultSourceID>> = createState(

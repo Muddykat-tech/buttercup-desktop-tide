@@ -1,6 +1,6 @@
 import path from "path";
 import { BrowserWindow, dialog } from "electron";
-import { Credentials, VaultSourceID } from "buttercup";
+import { Credentials, VaultSourceID } from "buttercup-heimdall";
 import { addVault } from "../services/buttercup";
 import { logInfo } from "../library/log";
 import { t } from "../../shared/i18n/trans";

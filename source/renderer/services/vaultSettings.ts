@@ -1,4 +1,4 @@
-import { VaultSourceID } from "buttercup";
+import { VaultSourceID } from "buttercup-heimdall";
 import { ipcRenderer } from "electron";
 import { VaultSettingsLocal } from "../types";
 

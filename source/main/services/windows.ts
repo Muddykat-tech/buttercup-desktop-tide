@@ -1,7 +1,7 @@
 import path from "path";
 import { BrowserWindow, BrowserWindowConstructorOptions, shell } from "electron";
 import { enable as enableWebContents } from "@electron/remote/main";
-import { VaultSourceID } from "buttercup";
+import { VaultSourceID } from "buttercup-heimdall";
 import debounce from "debounce";
 import { getConfigValue, setConfigValue } from "./config";
 import { getIconPath } from "../library/tray";

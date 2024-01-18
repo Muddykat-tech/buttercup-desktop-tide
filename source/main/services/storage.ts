@@ -1,7 +1,7 @@
 import path from "path";
 import envPaths from "env-paths";
 import { FileStorage } from "../library/FileStorage";
-import { VaultSourceID } from "buttercup";
+import { VaultSourceID } from "buttercup-heimdall";
 
 interface EnvPaths {
     data: string;

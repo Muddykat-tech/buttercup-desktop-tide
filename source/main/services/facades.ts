@@ -1,4 +1,4 @@
-import { VaultFacade, VaultSourceID } from "buttercup";
+import { VaultFacade, VaultSourceID } from "buttercup-heimdall";
 import { getVaultFacadeBySource } from "./buttercup";
 
 const __cachedFacades: Record<VaultSourceID, VaultFacade> = {};

@@ -1,4 +1,4 @@
-import { VaultSourceID } from "buttercup";
+import { VaultSourceID } from "buttercup-heimdall";
 import { createStateObject } from "obstate";
 import { VaultSourceDescription } from "../types";
 

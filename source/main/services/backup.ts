@@ -1,6 +1,6 @@
 import path from "path";
 import fs from "fs/promises";
-import { VaultSource, VaultSourceID } from "buttercup";
+import { VaultSource, VaultSourceID } from "buttercup-heimdall";
 import { logErr, logInfo } from "../library/log";
 import { getVaultSettings } from "./config";
 import { VAULTS_BACKUP_PATH } from "./storage";
