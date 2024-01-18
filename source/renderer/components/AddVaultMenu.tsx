@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Button, Card, Classes, Dialog, Elevation, FormGroup, InputGroup, Intent, Switch } from "@blueprintjs/core";
 import { useState as useHookState } from "@hookstate/core";
 import path from "path-posix";
-import { FileSystemInterface } from "@buttercup/file-interface";
+import { FileSystemInterface } from "@muddykat-tech/file-interface";
 import { SHOW_ADD_VAULT } from "../state/addVault";
 import { setBusy } from "../state/app";
 import { authDropbox } from "../actions/dropbox";

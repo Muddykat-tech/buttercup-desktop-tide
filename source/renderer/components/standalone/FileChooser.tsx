@@ -1,7 +1,7 @@
 import * as React from "react";
 import styled from "styled-components";
 import { Alignment, Breadcrumb, Breadcrumbs, Button, Card, Classes, Dialog, IBreadcrumbProps, Icon, InputGroup, Intent, Navbar, Spinner } from "@blueprintjs/core";
-import { FileIdentifier, FileItem, FileSystemInterface, PathIdentifier } from "@buttercup/file-interface";
+import { FileIdentifier, FileItem, FileSystemInterface, PathIdentifier } from "@muddykat-tech/file-interface";
 import { t } from "../../../shared/i18n/trans";
 import { NewVaultPlaceholder } from "../../types";
 

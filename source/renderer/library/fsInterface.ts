@@ -5,12 +5,12 @@ import {
     WebDAVInterface,
     DBInterface,
     Identifier
-} from "@buttercup/file-interface";
+} from "@muddykat-tech/file-interface";
 import { GoogleDriveClient } from "@buttercup/googledrive-client";
 import { DropboxClient } from "@buttercup/dropbox-client";
 import { createClient as createWebdavClient } from "webdav";
 import { SourceType } from "../types";
-import { ButtercupServerClient } from "buttercup-server-client";
+import { ButtercupServerClient } from "@amalsaju/buttercup-server-client";
 import { ipcRenderer } from "electron";
 
 export interface FSInstanceSettings {
