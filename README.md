@@ -1,6 +1,7 @@
 # Buttercup Desktop - Heimdall Implementation Branch
 > [Latest Release](https://github.com/muddykat-tech/buttercup-desktop-tide/releases)<br>
 > Warning Tide Network is currently under development and has periodic resets, which may result in tide **account deletion**.<br>
+> Treat this repository more of a proof of concept until futher notice.<br>
 
 ## About
 This branch changes implements a new datasource / vault type. A Tide vault, this vault uses heimdall for encryption and authentication. 
@@ -67,4 +68,3 @@ If you encounter issues with this command check the ```package.json``` as it con
 
 **For more indepth Development information See below**
 > See main branch of [Buttercup](https://github.com/buttercup/buttercup-desktop/tree/master)<br>
-> Treat this repository more of a proof of concept until futher notice.<br>
