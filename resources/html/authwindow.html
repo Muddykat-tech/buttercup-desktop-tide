@@ -6,7 +6,7 @@
 <body>
     <h1 id="hey"></h1>
     <script type="module">
-        import { Heimdall, TidePromise } from "https://unpkg.com/heimdall-tide@0.0.50-test/src/heimdall.js";
+        import { Heimdall, TidePromise } from "https://unpkg.com/heimdall-tide@0.0.60/src/heimdall.js";
 
         // Function to send data to the main process
         const sendDataToMainProcess = (data) => {
@@ -19,8 +19,7 @@
             appOriginTextSignature: "l9l6lcm3YTofSclA9/ISLslOPbqMRCp4VitPZWb/DZexwt0H+liPjiyjv75Xf3wq856Fd53mamCK4ldU1pDcAw==",
             homeORKUrl: "https://prod-ork3.azurewebsites.net",
             enclaveRequest: {
-                getUserInfoFirst: false, // 1 step process - we will not supply a customModel halfway through the process
-                refreshToken: true, // I want a TideJWT returned
+                refreshToken: false, // Just need UID
                 customModel: undefined // I do not want to provide a customModel
             }
         }
@@ -30,9 +29,9 @@
 
         // Function to handle the button action and send data to the main process
         const tideButtonAction = async (promise) => {
-            heimdall.GetCompleted(promise);
+            heimdall.GetUserInfo(promise);
             const values = await tidePromise.promise;
-            sendDataToMainProcess({ token: values.TideJWT });
+            sendDataToMainProcess({ token: values.UID }); // buttercup will actually store the UID in place of the JWT. Too much hassle changing TideJWT val name everywhere in code rn
         }
 
         const tideButton = heimdall.AddTideButton(tideButtonAction, tidePromise);

@@ -217,7 +217,7 @@
     "execution-time": "^1.4.1",
     "express": "^4.18.2",
     "express-promise-router": "^4.1.1",
-    "heimdall-tide": "^0.0.50-test",
+    "heimdall-tide": "^0.0.60",
     "i18next": "^23.6.0",
     "iocane": "^5.1.1",
     "keytar": "^7.9.0",
