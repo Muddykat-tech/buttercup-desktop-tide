@@ -1,6 +1,6 @@
 # Buttercup Desktop - Heimdall Implementation Branch
 > [Latest Release](https://github.com/muddykat-tech/buttercup-desktop-tide/releases)<br>
-> Warning Tide Network is currently under development and has periodic resets, which may result in tide **account deletion**.<br>
+> I've stopped active development at the moment, hence this branch is now behind the master.
 > Treat this repository more of a proof of concept until futher notice.<br>
 
 ## About
