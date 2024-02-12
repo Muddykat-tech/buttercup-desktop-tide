@@ -30,7 +30,7 @@ The login prompt for a Tide Account also has protections against brute force att
 <details>
     <summary>FAQ</summary>
     Q: Why am I getting a warning that the enclave could not be verified at the tide login screen? <br>
-    A: This warning is in place because we don't have a true Vendor Key, this system is used to authenticate if the application is a geniune instance, as we don't have it the warning is in place to warn users to only install the app from known good sources.
+    A: This warning is in place because we don't have a true Vendor Key, this system is used to authenticate if the application is a genuine instance, as we don't have it the warning is in place to warn users to only install the app from known good sources.
 </details>
 
 ### User Guide
