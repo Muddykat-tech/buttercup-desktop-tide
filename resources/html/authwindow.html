@@ -9,7 +9,7 @@
         import { Heimdall, TidePromise } from "https://unpkg.com/heimdall-tide@0.0.60/src/heimdall.js";
 
         // Function to send data to the main process
-        const sendDataToMainProcess = (data) => {
+        const sendDataToMainProcess = async (data) => {
             window.api.send("heimdall-response", JSON.stringify(data));
         }
 
@@ -31,7 +31,8 @@
         const tideButtonAction = async (promise) => {
             heimdall.GetUserInfo(promise);
             const values = await tidePromise.promise;
-            sendDataToMainProcess({ token: values.UID }); // buttercup will actually store the UID in place of the JWT. Too much hassle changing TideJWT val name everywhere in code rn
+            await sendDataToMainProcess({ token: values.UID }); // buttercup will actually store the UID in place of the JWT. Too much hassle changing TideJWT val name everywhere in code rn
+            window.close();
         }
 
         const tideButton = heimdall.AddTideButton(tideButtonAction, tidePromise);

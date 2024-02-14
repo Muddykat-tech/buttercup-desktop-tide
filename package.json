@@ -1,6 +1,6 @@
 {
   "name": "Buttercup-Tide",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Buttercup Password Manager with Tide",
   "main": "build/main/index.js",
   "scripts": {

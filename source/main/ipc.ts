@@ -105,8 +105,8 @@ ipcMain.on("heimdall-response", async (event, data) => {
     const valid = await validateAndUpdate(receivedData.token);
 
     if (valid) {
-        const current_win = await BrowserWindow.getFocusedWindow();
-        current_win.close();
+        //const current_win1 = await BrowserWindow.getFocusedWindow();
+        //current_win1.close();
     } else {
         console.error("Failed to Validate JWT");
     }

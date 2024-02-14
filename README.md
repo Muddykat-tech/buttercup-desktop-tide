@@ -1,6 +1,8 @@
 # Buttercup Desktop - Heimdall Implementation Branch
 > [Latest Release](https://github.com/muddykat-tech/buttercup-desktop-tide/releases)<br>
-> I've stopped active development at the moment, hence this branch is now behind the master.
+> I've stopped active development at the moment, hence this branch is now behind the master.<br>
+> As of February 5th 2024, the default tide-buttercup vault server is down, and will not be hosted.
+> To use this repository you'll need to self host the vault server, see [this repo](https://github.com/Amalsaju/buttercup-vault-database) for the code
 > Treat this repository more of a proof of concept until futher notice.<br>
 
 ## About
