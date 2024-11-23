@@ -33,7 +33,7 @@ interface FileChooserProps {
         isNew: boolean,
         fileName: string | null
     ) => void;
-    fsInterface: FileSystemInterface;
+    fsInterface: FileSystemInterface | null;
 }
 
 const FILE_COLOUR = "#222";

@@ -16,7 +16,7 @@ export interface AppEnvironmentFlags {
     portable: boolean;
 }
 
-export type DatasourceConfig = { [key: string]: string } & { type: SourceType };
+export type DatasourceConfig = { [key: string]: string | null } & { type: SourceType | null };
 
 export interface Language {
     name: string;

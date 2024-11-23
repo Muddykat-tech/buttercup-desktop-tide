@@ -129,22 +129,22 @@ export function AddVaultMenu() {
     const showAddVault = useHookState(SHOW_ADD_VAULT);
     const [previousShowAddVault, setPreviousShowAddVault] = useState(false);
     const [currentPage, setCurrentPage] = useState(PAGE_TYPE);
-    const [selectedType, setSelectedType] = useState<SourceType>(null);
-    const [selectedRemotePath, setSelectedRemotePath] = useState<string>(null);
-    const [datasourcePayload, setDatasourcePayload] = useState<DatasourceConfig>({ ...EMPTY_DATASOURCE_CONFIG });
-    const [fsInstance, setFsInstance] = useState<FileSystemInterface>(null);
-    const [createNew, setCreateNew] = useState(false);
+    const [selectedType, setSelectedType] = useState<SourceType| null>(null);
+    const [selectedRemotePath, setSelectedRemotePath] = useState<string| null>(null);
+    const [datasourcePayload, setDatasourcePayload] = useState<DatasourceConfig>({ ...EMPTY_DATASOURCE_CONFIG }); 
+    const [fsInstance, setFsInstance] = useState<FileSystemInterface | null>(null);
+    const [createNew, setCreateNew] = useState(false); 
     const [vaultPassword, setVaultPassword] = useState("");
     const [webdavCredentials, setWebDAVCredentials] = useState<WebDAVCredentialsState>({ ...EMPTY_WEBDAV_CREDENTIALS });
     const [authenticatingGoogleDrive, setAuthenticatingGoogleDrive] = useState(false);
     const [googleDriveOpenPerms, setGoogleDriveOpenPerms] = useState(false);
-    const [vaultFilenameOverride, setVaultFilenameOverride] = useState(null);
+    const [vaultFilenameOverride, setVaultFilenameOverride] = useState<string | null>(null);
     const [dbCredentials, setDbCredentials] = useState<DBCredentialsState>({ ...EMPTY_DB_CREDENTIALS });
 
     useEffect(() => {
         const newValue = showAddVault.get();
         if (previousShowAddVault !== newValue) {
-            setPreviousShowAddVault(showAddVault.get());
+            setPreviousShowAddVault(newValue);
             if (newValue) {
                 setCurrentPage(PAGE_TYPE);
             }
@@ -314,19 +314,24 @@ export function AddVaultMenu() {
             setCurrentPage(PAGE_CHOOSE);
         }
     }, [selectedType, datasourcePayload, webdavCredentials, dbCredentials, googleDriveOpenPerms]);
-    const handleSelectedPathChange = useCallback((parentIdentifier: string | null, identifier: string, isNew: boolean, fileName: string | null) => {
-        if (selectedType === SourceType.GoogleDrive) {
-            setSelectedRemotePath(JSON.stringify([parentIdentifier, identifier]));
-            setVaultFilenameOverride(fileName);
-        } else {
-            if (!identifier) {
-                setSelectedRemotePath(null);
-            } else {
-                setSelectedRemotePath(path.join(parentIdentifier || "/", identifier));
-            }
-        }
-        setCreateNew(isNew);
-    }, [selectedType]);
+    const handleSelectedPathChange = useCallback((
+        parentIdentifier: string | number | null,  // Accept string | number | null for parentIdentifier
+        identifier: string | number | null,        // Accept string | number | null for identifier
+        isNew: boolean,
+        fileName: string | null
+      ) => {
+          if (selectedType === SourceType.GoogleDrive) {
+              setSelectedRemotePath(JSON.stringify([parentIdentifier, identifier]));
+              setVaultFilenameOverride(fileName);
+          } else {
+              if (!identifier) {
+                  setSelectedRemotePath(null);
+              } else {
+                  setSelectedRemotePath(path.join(parentIdentifier || "/", identifier));
+              }
+          }
+          setCreateNew(isNew);
+      }, [selectedType]);
     const handleVaultFileSelect = useCallback(() => {
         if (selectedType === SourceType.Dropbox) {
             setDatasourcePayload({
@@ -356,16 +361,16 @@ export function AddVaultMenu() {
     const handleFinalConfirm = useCallback(async () => {
         const datasource = { ...datasourcePayload };
         if (selectedType === SourceType.GoogleDrive) {
-            const [parentIdentifier, identifier] = JSON.parse(selectedRemotePath);
+            const [parentIdentifier, identifier] = JSON.parse(selectedRemotePath == null ? "null" : selectedRemotePath);
             datasource.fileID = createNew
-                ? await createEmptyGoogleDriveVault(datasource.token, parentIdentifier, identifier, vaultPassword)
+                ? await createEmptyGoogleDriveVault(datasource.token == null ? "null" : datasource.token, parentIdentifier, identifier, vaultPassword)
                 : identifier;
         }
         if (selectedType === SourceType.DB) {
             // Just to prevent any errors if a 'password' is required.
-            addNewVaultTarget(datasource, { sourceType: "db" }, createNew, vaultFilenameOverride);
+            addNewVaultTarget(datasource, { sourceType: "db" }, createNew, vaultFilenameOverride == null ? "null" : vaultFilenameOverride);
         } else { 
-            addNewVaultTarget(datasource, vaultPassword, createNew, vaultFilenameOverride);
+            addNewVaultTarget(datasource, vaultPassword, createNew, vaultFilenameOverride == null ? "null" : vaultFilenameOverride);
         }
         close(); // This also clears sensitive state items
     }, [datasourcePayload, vaultPassword, selectedType, selectedRemotePath, createNew]);
@@ -467,9 +472,9 @@ export function AddVaultMenu() {
                         <InputGroup
                             placeholder="https://buttercupapi.azurewebsites.net/"
                            
-                            onFocus={evt => setDbCredentials({
+                            onChange={evt => setDbCredentials({
                                 ...dbCredentials,
-                                url: "https://buttercupapi.azurewebsites.net/",
+                                url: evt.target.value,
                                 token: jwt
                             })}
                            

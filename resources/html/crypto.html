@@ -10,7 +10,7 @@
 </body>
 <script type="module">
     import { Heimdall, TidePromise, FieldData } from "https://unpkg.com/heimdall-tide@0.0.60/src/heimdall.js";
-    
+
     //Channel to send and receive must be whitelisted in the preload.js file
     // TO send data
     //window.api.send("toMain", param);
@@ -21,7 +21,7 @@
         vendorPublic: "us7ieal6GOfYgcVJa50cdqp78qBLy6zqv7zvuqbR34U=",
         appOriginText: "securing the vendorurl",
         appOriginTextSignature: "2T0gMbfNFDk69vzHQUBa2ExHDBFkUfG7h00SQ1KPLuIv5som+GOt18ujVIgg8qnCXw4duuCFRb/uHWe0h1a2Aw==",
-        homeORKUrl: "https://prod-ork3.azurewebsites.net",
+        homeORKUrl: "https://orkeylessh1.azurewebsites.net",
         enclaveRequest: {
             refreshToken: false, // Only need a UID now
             customModel: undefined // I do not want to provide a customModel
@@ -59,7 +59,7 @@
         } catch {
            console.warn("Failed to Parse jsonData.data, this may be okay.")
         }
-         
+
         const tidePromise = new TidePromise(); // a TidePromise which allows us to get the values from the FULL sign in process
         const fieldData = new FieldData(["vaultdata"]);
         fieldData.add(data, ["vaultdata"]);
@@ -93,7 +93,7 @@
         const tideButton2 = heimdall.AddTideButton(tideButtonAction2, params2); // returns Tide Button for you to stylise
         tideButton2.click();
         const decrypted = await tidePromise2.promise; // the security of doing this is suspect! ~Muddykat
-        
+
 
         const fieldData2 = new FieldData(["vaultdata"]);
         fieldData2.addManyWithTag(decrypted);

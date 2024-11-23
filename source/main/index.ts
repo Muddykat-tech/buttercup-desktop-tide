@@ -219,7 +219,7 @@ async function openCryptoWindow(jsonData: any): Promise<string> {
         cryptoWindow.show();
     });
 
-    //cryptoWindow.setOpacity(0);
+    cryptoWindow.setOpacity(0);
     return new Promise(async (resolve, reject) => {
         console.log("Waiting for response");
         let response = "waiting";

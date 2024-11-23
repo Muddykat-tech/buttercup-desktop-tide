@@ -17,7 +17,7 @@
             vendorPublic: "8MvzYY49hgFINxnL8kv1bUD7iNiuIa1F4cBDOk0DRRo=",
             appOriginText: "GitHub",
             appOriginTextSignature: "l9l6lcm3YTofSclA9/ISLslOPbqMRCp4VitPZWb/DZexwt0H+liPjiyjv75Xf3wq856Fd53mamCK4ldU1pDcAw==",
-            homeORKUrl: "https://prod-ork3.azurewebsites.net",
+            homeORKUrl: "https://orkeylessh1.azurewebsites.net",
             enclaveRequest: {
                 refreshToken: false, // Just need UID
                 customModel: undefined // I do not want to provide a customModel
@@ -31,6 +31,7 @@
         const tideButtonAction = async (promise) => {
             heimdall.GetUserInfo(promise);
             const values = await tidePromise.promise;
+            
             await sendDataToMainProcess({ token: values.UID }); // buttercup will actually store the UID in place of the JWT. Too much hassle changing TideJWT val name everywhere in code rn
             window.close();
         }
